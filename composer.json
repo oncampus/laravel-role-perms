@@ -1,0 +1,19 @@
+{
+    "name": "kevinberg/LaravelRolePerms",
+    "description": "Role based permissions for laravel",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kevin Berg",
+            "email": "mail@kevinberg.de"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "kevinberg\\LaravelRolePerms\\": "src/"
+        }
+    }
+}
