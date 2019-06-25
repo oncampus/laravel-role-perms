@@ -8,4 +8,12 @@ class Permission extends Model
 {
     protected $table = 'permissions';
     protected $guarded = [];
+
+    /**
+     * The permissions that belong to the role.
+     */
+    public function roles()
+    {
+        return $this->belongsToMany('kevinberg\LaravelRolePerms\Role', 'role_permissions')->withTimestamps();
+    }
 }
