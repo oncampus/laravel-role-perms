@@ -21,7 +21,7 @@
 
     <hr />
 
-    <h2>New Role</h2>
+    <h2>New Permission</h2>
 
     <form action="{{ route('permissions.store') }}" method="post">
         @csrf
