@@ -9,14 +9,19 @@
 @section('content')
 
     <h1>Laravel Role Perms</h1>
+
+    @include('LaravelRolePerms::navigation')
+
     <h2>Roles</h2>
 
     @foreach ($roles as $role)
-        <p>
-            <a href="{{ route('roles.show', $role ) }}">
-                id: {{ $role->id }} name: {{ $role->name }}
-            </a>
-        </p>
+        <ul>
+            <li>
+                <a href="{{ route('roles.show', $role ) }}">
+                    id: {{ $role->id }} name: {{ $role->name }}
+                </a>
+            </li>
+        </ul>
     @endforeach
 
     <hr />

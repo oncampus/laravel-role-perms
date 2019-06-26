@@ -9,13 +9,49 @@
 @section('content')
 
     <h1>Laravel Role Perms - Show Role</h1>
-    <h2>id: {{ $role->id }}</h2>
+
+    @include('LaravelRolePerms::navigation')
+
+    <hr />
+
+    <h2>Role name: {{ $role->name }}</h2>
+    <h3>id: {{ $role->id }}</h3>
 
     <form action="{{ route('roles.update', [$role]) }}" method="post">
         @csrf
         @method('PATCH')
-        <input type="text" name="name" placeholder="Role name" value="{{ $role->name }}"/>
-        <input type="submit" />
+
+        <div>
+            <label for="name">Role name</label>
+            <input type="text" name="name" placeholder="Role name" value="{{ $role->name }}"/>
+        </div>
+
+        <div>
+            <label for="permissions">Permissions</label>
+            <select multiple id="permissions" name="permissions[]">
+                @foreach($permissions as $permission)
+                    @if($role->permissions->contains($permission->id))
+                        <option value="{{ $permission->id }}" selected>{{ $permission->name }}</option>
+                    @else
+                        <option value="{{ $permission->id }}">{{ $permission->name }}</option>
+                    @endif
+                @endforeach
+            </select>
+        </div>
+
+        <div>
+            <label for="users">User</label>
+            <select multiple id="users" name="users[]">
+                @foreach($users as $user)
+                    @if($role->users->contains($user->id))
+                        <option value="{{ $user->id }}" selected>{{ $user->name }}</option>
+                    @else
+                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                    @endif
+                @endforeach
+            </select>
+        </div>
+        <input type="submit" value="save"/>
     </form>
 
     <hr />

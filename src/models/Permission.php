@@ -14,6 +14,6 @@ class Permission extends Model
      */
     public function roles()
     {
-        return $this->belongsToMany('kevinberg\LaravelRolePerms\Role', 'role_permissions')->withTimestamps();
+        return $this->belongsToMany('kevinberg\LaravelRolePerms\Models\Role', 'role_permissions');
     }
 }

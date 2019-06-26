@@ -5,6 +5,7 @@ namespace kevinberg\LaravelRolePerms\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use kevinberg\LaravelRolePerms\Models\Permission;
+use kevinberg\LaravelRolePerms\Models\Role;
 
 class PermissionController extends Controller
 {

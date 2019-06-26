@@ -15,14 +15,12 @@ class UserRolesMigration extends Migration
         Schema::create('user_roles', function(Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('role_id');
-            $table->unsignedInteger('user_id');
+            $table->foreign('role_id')->references('id')->on('roles');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });
 
-        Schema::table('user_roles', function($table) {
-            $table->foreign('role_id')->references('id')->on('roles');
-            $table->foreign('user_id')->references('id')->on('users');
-        });
 
         // ToDo doesnt work at the moment...
     }

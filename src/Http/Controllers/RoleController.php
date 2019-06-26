@@ -2,9 +2,11 @@
 
 namespace kevinberg\LaravelRolePerms\Http\Controllers;
 
+use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use kevinberg\LaravelRolePerms\Models\Role;
+use kevinberg\LaravelRolePerms\Models\Permission;
 
 class RoleController extends Controller
 {
@@ -51,7 +53,14 @@ class RoleController extends Controller
         }
 
         $role = Role::findOrFail($id);
-        return view('LaravelRolePerms::role', ['role' => $role]);
+        $permissions = Permission::all();
+        $users = User::all();
+
+        return view('LaravelRolePerms::role', [
+            'role' => $role,
+            'permissions' => $permissions,
+            'users' => $users
+        ]);
     }
 
 
@@ -65,14 +74,43 @@ class RoleController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => 'required|unique:roles'
+            'name' => 'string|min:3|unique:permissions',
+            'permissions' => 'array',
+            'permissions.*' => 'exists:permissions,id',
+            'users' => 'array',
+            'users.*' => 'exists:users,id'
         ]);
 
         $role = Role::findOrFail($id);
-        $role->name = $request->name;
-        $role->save();
+        $changed = false;
 
-        return view('LaravelRolePerms::role', ['role' => $role]);
+        if(!empty($request->name)) {
+            $role->name = $request->name;
+            $changed = true;
+        }
+
+        if(isset($request->permissions) && is_array($request->permissions)) {
+            $role->permissions()->sync($request->permissions);
+            $changed = true;
+        }
+
+        if(isset($request->users) && is_array($request->users)) {
+            $role->users()->sync($request->users);
+            $changed = true;
+        }
+
+        if($changed) {
+            $role->save();
+        }
+
+        $permissions = Permission::all();
+        $users = User::all();
+
+        return view('LaravelRolePerms::role', [
+            'role' => $role,
+            'permissions' => $permissions,
+            'users' => $users
+        ]);
     }
 
     /**
