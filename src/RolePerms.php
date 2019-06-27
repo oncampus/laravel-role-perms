@@ -332,4 +332,19 @@ class RolePerms
     {
         return Cache::forget($this->getPermissionCacheKey($user));
     }
+
+    /**
+     * Creates a new role.
+     *
+     * @param String $roleName
+     * @return int
+     */
+    public function storeRole(String $roleName): int
+    {
+        $role = new Role();
+        $role->name = $roleName;
+        $role->save();
+
+        return $role->id;
+    }
 }

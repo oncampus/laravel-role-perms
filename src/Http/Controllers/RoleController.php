@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use kevinberg\LaravelRolePerms\Models\Role;
 use kevinberg\LaravelRolePerms\Models\Permission;
+use kevinberg\LaravelRolePerms\Facades\RolePerms; # Todo use these functions here!!
 
 class RoleController extends Controller
 {
@@ -33,10 +34,7 @@ class RoleController extends Controller
             'name' => 'required|unique:roles'
         ]);
 
-        $role = new Role();
-        $role->name = $request->name;
-        $role->save();
-
+        RolePerms::storeRole($request->name);
         return redirect()->route('roles.index');
     }
 
