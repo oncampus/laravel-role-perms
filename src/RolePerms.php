@@ -20,7 +20,7 @@ class RolePerms
         if(Auth::check()) {
 
             $user = Auth::user();
-            $key = config('role_perms.cache_key_prefix') . 'user_'.$user->id.'_roles';
+            $key = config('role_perms.cache_key_prefix') . '_user_'.$user->id.'_roles';
             $cached = Cache::get($key);
 
             if(is_null($cached) || ! is_array($cached)) {
@@ -69,7 +69,7 @@ class RolePerms
         if(Auth::check()) {
 
             $user = Auth::user();
-            $key = config('role_perms.cache_key_prefix') . 'user_'.$user->id.'_permissions';
+            $key = config('role_perms.cache_key_prefix') . '_user_'.$user->id.'_permissions';
             $cached = Cache::get($key);
 
             if(is_null($cached) || ! is_array($cached)) {
