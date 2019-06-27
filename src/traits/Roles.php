@@ -11,4 +11,12 @@ trait Roles
     {
         return $this->belongsToMany('kevinberg\LaravelRolePerms\Models\Role', 'user_roles');
     }
+
+    /**
+     * The users that belong to the role.
+     */
+    public function roleResponsibilities()
+    {
+        return $this->belongsToMany('kevinberg\LaravelRolePerms\Models\Role', 'role_responsibilities');
+    }
 }
