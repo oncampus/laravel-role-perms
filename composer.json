@@ -15,5 +15,12 @@
         "psr-4": {
             "kevinberg\\LaravelRolePerms\\": "src/"
         }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "kevinberg\\LaravelRolePerms\\LaravelRolePermsServiceProvider"
+            ]
+        }
     }
 }

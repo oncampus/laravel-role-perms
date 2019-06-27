@@ -24,4 +24,13 @@ class Role extends Model
     {
         return $this->belongsToMany('App\User', 'user_roles');
     }
+
+    /**
+     * The users that belong to the role.
+     */
+    public function responsibleUsers()
+    {
+        return $this->belongsToMany('App\User', 'role_responsibilities');
+    }
+
 }
