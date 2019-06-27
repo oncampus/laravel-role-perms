@@ -14,11 +14,18 @@ class LaravelRolePermsServiceProvider extends ServiceProvider {
         $this->publishes([
             __DIR__.'/views' => resource_path('views/vendor/LaravelRolePerms')
         ]);
+
+        $this->publishes([
+            __DIR__.'/config/role_perms.php' => config_path('role_perms.php'),
+        ]);
     }
 
     public function register()
     {
-        $this->app->bind('LRP', 'kevinberg\LaravelRolePerms\LRP' );
+        $this->app->bind('RolePerms', 'kevinberg\LaravelRolePerms\RolePerms');
+        $this->mergeConfigFrom(
+            __DIR__.'/config/role_perms.php', 'role_perms'
+        );
     }
 
 }
