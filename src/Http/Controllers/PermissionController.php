@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use kevinberg\LaravelRolePerms\Models\Permission;
 use kevinberg\LaravelRolePerms\Models\Role;
+use Illuminate\Support\Facades\Auth;
 
 class PermissionController extends Controller
 {
@@ -16,6 +17,10 @@ class PermissionController extends Controller
      */
     public function index()
     {
+        if(!Auth::check()) {
+
+        }
+
         $permissions = Permission::all();
         return view('LaravelRolePerms::permissions', ['permissions' => $permissions]);
     }

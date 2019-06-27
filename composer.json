@@ -12,6 +12,9 @@
     "minimum-stability": "dev",
     "require": {},
     "autoload": {
+        "classmap": [
+            "database"
+        ],
         "psr-4": {
             "kevinberg\\LaravelRolePerms\\": "src/"
         }
