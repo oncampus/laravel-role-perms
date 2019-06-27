@@ -18,7 +18,7 @@ class PermissionController extends Controller
     public function index()
     {
         if(!Auth::check()) {
-
+            # Todo
         }
 
         $permissions = Permission::all();

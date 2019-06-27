@@ -33,7 +33,7 @@ class Seeds extends Seeder
 
         $admin = User::where('name', 'admin')->first();
         if(is_object($admin) && isset($admin->id)) {
-            $roleAdmin->users()->attach($admin->id);
+            $roleAdmin->users()->syncWithoutDetaching([$admin->id]);
         }
     }
 }

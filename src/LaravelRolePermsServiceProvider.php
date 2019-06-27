@@ -18,7 +18,7 @@ class LaravelRolePermsServiceProvider extends ServiceProvider {
 
     public function register()
     {
-
+        $this->app->bind('LRP', 'kevinberg\LaravelRolePerms\LRP' );
     }
 
 }
