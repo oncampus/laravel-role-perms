@@ -53,7 +53,7 @@
         </div>
 
         <div>
-            <label for="responsible_users">User</label>
+            <label for="responsible_users">Responsible User</label>
             <select multiple id="responsible_users" name="responsible_users[]">
                 @foreach($users as $user)
                     @if($role->responsibleUsers->contains($user->id))
