@@ -1,5 +1,5 @@
 {
-    "name": "kevinberg/LaravelRolePerms",
+    "name": "kevinberg/laravel-role-perms",
     "description": "Role based permissions for laravel",
     "type": "library",
     "license": "MIT",

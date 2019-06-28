@@ -347,4 +347,48 @@ class RolePerms
 
         return $role->id;
     }
+
+    public function storePermission(String $permissionName): int
+    {
+        $permission = new Permission();
+        $permission->name = $permissionName;
+        $permission->save();
+
+        return $permission->id;
+    }
+
+    /**
+     * Deletes a specific role.
+     *
+     * @param String $roleName
+     * @return boolean
+     */
+    public function deleteRoleByName(String $roleName): bool
+    {
+        $role = Role::where('name', $roleName)->first();
+
+        if($role !== null) {
+            return $role->delete();
+        }
+
+        return false;
+    }
+
+    /**
+     * Deletes a specific permission.
+     *
+     * @param String $permissionName
+     * @return boolean
+     */
+    public function deletePermissionByName(String $permissionName): bool
+    {
+        $permission = Permission::where('name', $permissionName)->first();
+
+        if($permission !== null) {
+            return $permission->delete();
+        }
+
+        return false;
+    }
+
 }

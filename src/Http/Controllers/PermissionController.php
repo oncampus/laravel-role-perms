@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use kevinberg\LaravelRolePerms\Models\Permission;
 use kevinberg\LaravelRolePerms\Models\Role;
 use Illuminate\Support\Facades\Auth;
+use kevinberg\LaravelRolePerms\Facades\RolePerms;
 
 class PermissionController extends Controller
 {
@@ -37,10 +38,7 @@ class PermissionController extends Controller
             'name' => 'required|unique:permissions'
         ]);
 
-        $permission = new Permission();
-        $permission->name = $request->name;
-        $permission->save();
-
+        RolePerms::storePermission($request->name);
         return redirect()->route('permissions.index');
     }
 
