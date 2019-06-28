@@ -14,7 +14,7 @@
 
     <h2>Role Assignment (<a href="{{ route('roles.show', [$role->id]) }}">{{ $role->name }}</a>)</h2>
 
-    <form action="{{ route('roles.assign.update', [$roleAssign->id]) }}" method="post">
+    <form action="{{ route('role_assigns.update', [$roleAssign->id]) }}" method="post">
 
         @csrf
         @method('PATCH')
@@ -34,7 +34,7 @@
 
     <hr />
 
-    <form action="{{ route('roles.assign.delete', [$roleAssign->id]) }}" method="post">
+    <form action="{{ route('role_assigns.destroy', [$roleAssign->id]) }}" method="post">
         @csrf
         @method('DELETE')
         <input type="submit" value="Delete"/>

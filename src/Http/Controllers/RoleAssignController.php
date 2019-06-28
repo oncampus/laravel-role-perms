@@ -11,12 +11,25 @@ use Illuminate\Support\Facades\DB;
 class RoleAssignController extends Controller
 {
     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $roleAssigns = DB::table('role_assign')->get();
+        return view('LaravelRolePerms::role_assigns', [
+            'roleAssigns' => $roleAssigns
+        ]);
+    }
+
+    /**
      * Display the specified roleAssign resource.
      *
      * @param  $id
      * @return \Illuminate\Http\Response
      */
-    public function showRoleAssign(int $id)
+    public function show(int $id)
     {
         $roleAssign = DB::table('role_assign')->where('id', $id)->first();
 
@@ -41,7 +54,7 @@ class RoleAssignController extends Controller
      * @param integer $id
      * @return \Illuminate\Http\Response
      */
-    public function updateRoleAssign(Request $request,int $id)
+    public function update(Request $request,int $id)
     {
         $request->validate([
             'entity_type' => 'string|nullable',
@@ -59,7 +72,9 @@ class RoleAssignController extends Controller
             'entity_id' => $request->entity_id
         ]);
 
-        return redirect()->route('roles.assign.show', ['id' => $id]);
+        return redirect()->route('role_assigns.show', [
+            'id' => $id
+        ]);
     }
 
     /**
@@ -68,9 +83,9 @@ class RoleAssignController extends Controller
      * @param  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroyRoleAssign($id)
+    public function destroy($id)
     {
         DB::table('role_assign')->where('id', $id)->delete();
-        return redirect()->route('roles.index');
+        return redirect()->route('role_assigns.index');
     }
 }

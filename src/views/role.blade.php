@@ -68,7 +68,7 @@
         @foreach($role->users as $user)
             <tr>
                 <td>
-                    <a href="{{ route('roles.assign.show', [$user->pivot->id]) }}">{{ $user->pivot->id }}</a>
+                    <a href="{{ route('role_assigns.show', [$user->pivot->id]) }}">{{ $user->pivot->id }}</a>
                 </td>
                 <td>
                     {{ $user->name }}

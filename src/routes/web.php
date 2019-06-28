@@ -8,8 +8,8 @@ Route::group(['middleware' => ['web']], function () {
         Route::resource('permissions', 'PermissionController')->only([
             'index', 'store', 'show', 'update', 'destroy'
         ]);
-        Route::get('role_assign/{id}', 'RoleAssignController@showRoleAssign')->name('roles.assign.show');
-        Route::patch('role_assign/{id}', 'RoleAssignController@updateRoleAssign')->name('roles.assign.update');
-        Route::delete('role_assign/{id}', 'RoleAssignController@destroyRoleAssign')->name('roles.assign.delete');
+        Route::resource('role_assigns', 'RoleAssignController')->only([
+            'index', 'store', 'show', 'update', 'destroy'
+        ]);
     });
 });
