@@ -51,6 +51,20 @@
                 @endforeach
             </select>
         </div>
+
+        <div>
+            <label for="responsible_users">User</label>
+            <select multiple id="responsible_users" name="responsible_users[]">
+                @foreach($users as $user)
+                    @if($role->responsibleUsers->contains($user->id))
+                        <option value="{{ $user->id }}" selected>{{ $user->name }}</option>
+                    @else
+                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                    @endif
+                @endforeach
+            </select>
+        </div>
+
         <input type="submit" value="save"/>
     </form>
 

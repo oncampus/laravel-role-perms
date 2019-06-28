@@ -80,13 +80,16 @@ class RoleController extends Controller
             'permissions' => 'array',
             'permissions.*' => 'exists:permissions,id',
             'users' => 'array',
-            'users.*' => 'exists:users,id'
+            'users.*' => 'exists:users,id',
+            'responsible_users' => 'array',
+            'responsible_users.*' => 'exists:users,id'
         ]);
 
         $role = Role::findOrFail($id);
         $role->name = $request->name;
         $role->permissions()->sync($request->permissions);
         $role->users()->sync($request->users);
+        $role->responsibleUsers()->sync($request->responsible_users);
         $role->save();
 
         $permissions = Permission::all();
