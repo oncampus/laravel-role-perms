@@ -1,7 +1,7 @@
 # Install
 ## Get the package
 
-    composer require kevinberg\LaravelRolePerms
+    composer require kevinberg/laravel-role-perms
 
 ## Extend the user class
 
