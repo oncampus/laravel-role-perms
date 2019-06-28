@@ -56,6 +56,35 @@
 
     <hr />
 
+    <h2>Role Assignments</h2>
+
+    <table>
+        <tr>
+            <th>#ID</th>
+            <th>User</th>
+            <th>Entity Type</th>
+            <th>Entity ID</th>
+        </tr>
+        @foreach($role->users as $user)
+            <tr>
+                <td>
+                    <a href="{{ route('roles.assign.show', [$user->pivot->id]) }}">{{ $user->pivot->id }}</a>
+                </td>
+                <td>
+                    {{ $user->name }}
+                </td>
+                <td>
+                    {{ $user->pivot->entity_type }}
+                </td>
+                <td>
+                    {{ $user->pivot->entity_id }}
+                </td>
+            </tr>
+        @endforeach
+    </table>
+
+    <hr />
+
     <form action="{{ route('roles.destroy', [$role]) }}" method="post">
         @csrf
         @method('DELETE')

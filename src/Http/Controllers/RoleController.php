@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use kevinberg\LaravelRolePerms\Models\Role;
 use kevinberg\LaravelRolePerms\Models\Permission;
-use kevinberg\LaravelRolePerms\Facades\RolePerms; # Todo use these functions here!!
 
 class RoleController extends Controller
 {
@@ -19,7 +18,9 @@ class RoleController extends Controller
     public function index()
     {
         $roles = Role::all();
-        return view('LaravelRolePerms::roles', ['roles' => $roles]);
+        return view('LaravelRolePerms::roles', [
+            'roles' => $roles
+        ]);
     }
 
     /**
@@ -34,7 +35,10 @@ class RoleController extends Controller
             'name' => 'required|unique:roles'
         ]);
 
-        RolePerms::storeRole($request->name);
+        $role = new Role();
+        $role->name = $request->name;
+        $role->save();
+
         return redirect()->route('roles.index');
     }
 
@@ -80,26 +84,10 @@ class RoleController extends Controller
         ]);
 
         $role = Role::findOrFail($id);
-        $changed = false;
-
-        if(!empty($request->name)) {
-            $role->name = $request->name;
-            $changed = true;
-        }
-
-        if(isset($request->permissions) && is_array($request->permissions)) {
-            $role->permissions()->sync($request->permissions);
-            $changed = true;
-        }
-
-        if(isset($request->users) && is_array($request->users)) {
-            $role->users()->sync($request->users);
-            $changed = true;
-        }
-
-        if($changed) {
-            $role->save();
-        }
+        $role->name = $request->name;
+        $role->permissions()->sync($request->permissions);
+        $role->users()->sync($request->users);
+        $role->save();
 
         $permissions = Permission::all();
         $users = User::all();

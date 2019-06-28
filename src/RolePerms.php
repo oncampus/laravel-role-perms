@@ -247,49 +247,6 @@ class RolePerms
     }
 
     /**
-     * Grants a permission to an role.
-     *
-     * @param String $roleName
-     * @param String $permissionName
-     * @return boolean
-     */
-    public function grantPermission(String $roleName, String $permissionName): bool
-    {
-        $role = Role::where('name', $roleName)->first();
-
-        if($role) {
-            $permission = Permission::where('name', $permissionName)->first();
-            if($permission) {
-                $role->permissions()->syncWithoutDetaching([$permission->id]);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Checks if a specific permission exists.
-     *
-     * @param String $permissionName
-     * @return boolean
-     */
-    public function permissionExists(String $permissionName): bool
-    {
-        return (Permission::where('name', $permissionName)->first() !== null);
-    }
-
-    /**
-     * Checks if a specific role exists.
-     *
-     * @param String $roleName
-     * @return boolean
-     */
-    public function roleExists(String $roleName): bool
-    {
-        return (Role::where('name', $roleName)->first() !== null);
-    }
-
-    /**
      * Returns the cache key for roles.
      *
      * @param User $user
@@ -331,64 +288,6 @@ class RolePerms
     public function clearPermissionCache(User $user): bool
     {
         return Cache::forget($this->getPermissionCacheKey($user));
-    }
-
-    /**
-     * Creates a new role.
-     *
-     * @param String $roleName
-     * @return int
-     */
-    public function storeRole(String $roleName): int
-    {
-        $role = new Role();
-        $role->name = $roleName;
-        $role->save();
-
-        return $role->id;
-    }
-
-    public function storePermission(String $permissionName): int
-    {
-        $permission = new Permission();
-        $permission->name = $permissionName;
-        $permission->save();
-
-        return $permission->id;
-    }
-
-    /**
-     * Deletes a specific role.
-     *
-     * @param String $roleName
-     * @return boolean
-     */
-    public function deleteRoleByName(String $roleName): bool
-    {
-        $role = Role::where('name', $roleName)->first();
-
-        if($role !== null) {
-            return $role->delete();
-        }
-
-        return false;
-    }
-
-    /**
-     * Deletes a specific permission.
-     *
-     * @param String $permissionName
-     * @return boolean
-     */
-    public function deletePermissionByName(String $permissionName): bool
-    {
-        $permission = Permission::where('name', $permissionName)->first();
-
-        if($permission !== null) {
-            return $permission->delete();
-        }
-
-        return false;
     }
 
 }

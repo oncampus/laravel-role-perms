@@ -5,9 +5,7 @@ namespace kevinberg\LaravelRolePerms\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use kevinberg\LaravelRolePerms\Models\Permission;
-use kevinberg\LaravelRolePerms\Models\Role;
 use Illuminate\Support\Facades\Auth;
-use kevinberg\LaravelRolePerms\Facades\RolePerms;
 
 class PermissionController extends Controller
 {
@@ -18,10 +16,6 @@ class PermissionController extends Controller
      */
     public function index()
     {
-        if(!Auth::check()) {
-            # Todo
-        }
-
         $permissions = Permission::all();
         return view('LaravelRolePerms::permissions', ['permissions' => $permissions]);
     }
@@ -38,7 +32,10 @@ class PermissionController extends Controller
             'name' => 'required|unique:permissions'
         ]);
 
-        RolePerms::storePermission($request->name);
+        $permission = new Permission();
+        $permission->name = $request->name;
+        $permission->save();
+
         return redirect()->route('permissions.index');
     }
 

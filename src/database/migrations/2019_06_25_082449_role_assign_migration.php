@@ -3,7 +3,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UserRolesMigration extends Migration
+class RoleAssignMigration extends Migration
 {
     /**
      * Run the migrations.
@@ -12,12 +12,14 @@ class UserRolesMigration extends Migration
      */
     public function up()
     {
-        Schema::create('user_roles', function(Blueprint $table) {
+        Schema::create('role_assign', function(Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('role_id');
             $table->foreign('role_id')->references('id')->on('roles');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
+            $table->string('entity_type')->nullable(true);
+            $table->unsignedInteger('entity_id')->nullable(true);
             $table->timestamps();
         });
     }
@@ -29,6 +31,6 @@ class UserRolesMigration extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_roles');
+        Schema::dropIfExists('role_assign');
     }
 }

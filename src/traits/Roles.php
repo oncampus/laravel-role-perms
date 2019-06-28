@@ -9,7 +9,7 @@ trait Roles
      */
     public function roles()
     {
-        return $this->belongsToMany('kevinberg\LaravelRolePerms\Models\Role', 'user_roles');
+        return $this->belongsToMany('kevinberg\LaravelRolePerms\Models\Role', 'role_assign')->withPivot('id', 'entity_type', 'entity_id');
     }
 
     /**
