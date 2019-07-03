@@ -11,8 +11,8 @@ use App\User;
 
 class RoleAssignTest extends TestCase
 {
-    public function testCreateAssignAndDeleteRole() {
-
+    public function testCreateAssignAndDeleteRole()
+    {
         Cache::flush();
         $testUser = factory(User::class)->create();
         $roleName = 'testRole_'.uniqid();
@@ -42,6 +42,5 @@ class RoleAssignTest extends TestCase
         $this->assertTrue($deletedRole);
 
         $testUser->delete();
-
     }
 }
