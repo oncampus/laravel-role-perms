@@ -204,7 +204,8 @@ class RolePerms
 
             if($role !== null && $permission !== null) {
                 $this->clearPermissionCache();
-                return $role->permissions()->detach($permission->id);
+                $role->permissions()->detach($permission->id);
+                return !($this->roleHasPermission($roleName, $permissionName));
             }
         }
 
