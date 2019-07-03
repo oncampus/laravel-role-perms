@@ -21,40 +21,29 @@ class RolePerms
         if(Auth::check()) {
 
             $user = Auth::user();
-            $key = $this->getRoleCacheKey($user);
-            $cached = Cache::get($key);
+            $roleCache = Cache::get(config('role_perms.roles_cache_key'));
 
-            if(is_null($cached) || ! is_array($cached)) {
+            if(is_null($roleCache) || !is_array($roleCache)) {
+                $roleCache = array();
+            }
 
-                # the user has no cache entry at the moment.
-                if($this->RoleExists($roleName)) {
-                    $userHasRole = $this->userHasRole($user, $roleName);
-                    Cache::forever($key, array($roleName => $userHasRole));
-                    return $userHasRole;
-                }
-
-            } else {
-
-                # the user already has a cache entry.
-                if(array_key_exists($roleName, $cached)) {
-
-                    # the role is already stored in the user cache.
-                    return $cached[$roleName];
-
-                } else {
-
-                    # the result for the roleName is not stored in the user cache. Do it now.
-                    if($this->RoleExists($roleName)) {
-                        $userHasRole = $this->userHasRole($user, $roleName);
-                        $cached[$roleName] = $userHasRole;
-                        Cache::forever($key, $cached);
-                        return $userHasRole;
-                    }
-
+            # try to get the result from cache.
+            if(array_key_exists($user->id, $roleCache)) {
+                if(is_array($roleCache[$user->id]) && array_key_exists($roleName, $roleCache[$user->id])) {
+                    return $roleCache[$user->id][$roleName];
                 }
             }
-            return false;
+
+            # calculate result and store it in the cache.
+            $role = Role::where('name', $roleName)->first();
+            if($role) {
+                $userHasRole = $this->userHasRole($user, $roleName);
+                $roleCache[$user->id][$roleName] = $userHasRole;
+                Cache::forever(config('role_perms.roles_cache_key'), $roleCache);
+                return $userHasRole;
+            }
         }
+
         return false;
     }
 
@@ -70,41 +59,29 @@ class RolePerms
         if(Auth::check()) {
 
             $user = Auth::user();
-            $key = $this->getPermissionCacheKey($user);
-            $cached = Cache::get($key);
+            $permCache = Cache::get(config('role_perms.perms_cache_key'));
 
-            if(is_null($cached) || ! is_array($cached)) {
+            if(is_null($permCache) || !is_array($permCache)) {
+                $permCache = array();
+            }
 
-                # the user has no cache entry at the moment.
-                if($this->permissionExists($permissionName)) {
-                    $userHasPermission = $this->userHasPermission($user, $permissionName);
-                    Cache::forever($key, array($permissionName => $userHasPermission));
-                    return $userHasPermission;
-                }
-
-            } else {
-
-                # the user already has a cache entry.
-                if(array_key_exists($permissionName, $cached)) {
-
-                    # the permission is already stored in the user cache.
-                    return $cached[$permissionName];
-
-                } else {
-
-                    if($this->permissionExists($permissionName)) {
-                        # the result for the permissionName is not stored in the user cache. Do it now.
-                        $userHasPermission = $this->userHasPermission($user, $permissionName);
-                        $cached[$permissionName] = $userHasPermission;
-                        Cache::forever($key, $cached);
-                        return $userHasPermission;
-                    }
-
+            # try to get the result from cache.
+            if(array_key_exists($user->id, $permCache)) {
+                if(is_array($permCache[$user->id]) && array_key_exists($permissionName, $permCache[$user->id])) {
+                    return $permCache[$user->id][$permissionName];
                 }
             }
-            return false;
 
+            # calculate result and store it in the cache.
+            $permission = Permission::where('name', $permissionName)->first();
+            if($permission) {
+                $userHasPerm = $this->userHasPermission($user, $permissionName);
+                $permCache[$user->id][$permissionName] = $userHasPerm;
+                Cache::forever(config('role_perms.perms_cache_key'), $permCache);
+                return $userHasPerm;
+            }
         }
+
         return false;
     }
 
@@ -180,7 +157,7 @@ class RolePerms
 
         if($role) {
             $user->roles()->syncWithoutDetaching([$role->id]);
-
+            $this->clearRoleCache();
             return true;
         }
 
@@ -199,26 +176,13 @@ class RolePerms
         $role = Role::where('name', $roleName)->first();
 
         if($role) {
-
-            $user->roles()->detach($role->id);
-
-            $key = $this->getRoleCacheKey($user);
-            $cached = Cache::get($key);
-
-            if($cached !== null) {
-                if(is_array($cached)) {
-                    if(array_key_exists($roleName, $cached)) {
-                        unset($cached[$roleName]);
-                        Cache::forever($key, $cached);
-                    }
-                } else {
-                    # This case is very unlikely, but if it occurs something is wrong with the cache.
-                    $this->clearRoleCache($user);
-                }
+            if($this->userHasRole($user, $roleName)) {
+                $this->clearRoleCache();
+                return $user->roles()->detach($role->id);
             }
 
-            return true;
         }
+
         return false;
     }
 
@@ -237,9 +201,8 @@ class RolePerms
             $permission = Permission::where('name', $permissionName)->first();
 
             if($role !== null && $permission !== null) {
-                $role->permissions()->detach($permission->id);
-                Cache::flush();
-                return true;
+                $this->clearPermissionCache();
+                return $role->permissions()->detach($permission->id);
             }
         }
 
@@ -247,47 +210,23 @@ class RolePerms
     }
 
     /**
-     * Returns the cache key for roles.
-     *
-     * @param User $user
-     * @return void
-     */
-    public function getRoleCacheKey(User $user): String
-    {
-        return config('role_perms.cache_key_prefix') . '_user_'.$user->id.'_roles';
-    }
-
-    /**
-     * Returns the cache key for permissions.
-     *
-     * @param User $user
-     * @return void
-     */
-    public function getPermissionCacheKey(User $user): String
-    {
-        return config('role_perms.cache_key_prefix') . '_user_'.$user->id.'_permissions';
-    }
-
-    /**
      * Clears the role cache of a user.
      *
-     * @param User $user
-     * @return void
+     * @return bool
      */
-    public function clearRoleCache(User $user): bool
+    public function clearRoleCache(): bool
     {
-        return Cache::forget($this->getRoleCacheKey($user));
+        return Cache::forget(config('role_perms.roles_cache_key'));
     }
 
     /**
      * Clears the permission cache of a user.
      *
-     * @param User $user
-     * @return void
+     * @return bool
      */
-    public function clearPermissionCache(User $user): bool
+    public function clearPermissionCache(): bool
     {
-        return Cache::forget($this->getPermissionCacheKey($user));
+        return Cache::forget(config('role_perms.perms_cache_key'));
     }
 
 }

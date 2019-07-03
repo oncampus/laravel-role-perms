@@ -1,5 +1,6 @@
 <?php
 
 return [
-    'cache_key_prefix' => 'role_perms'
+    'roles_cache_key' => 'roles',
+    'perms_cache_key' => 'perms'
 ];
