@@ -166,6 +166,32 @@ class RolePerms
     }
 
     /**
+     * Checks if a role has a permission.
+     *
+     * @param String $roleName
+     * @param String $permissionName
+     * @return boolean
+     */
+    public function grantPermission(String $roleName, String $permissionName): bool
+    {
+        if($this->roleHasPermission($roleName, $permissionName)) {
+            return true;
+        }
+
+        $role = Role::where('name', $roleName)->first();
+        $permission = Permission::where('name', $permissionName)->first();
+
+        if($role !== null && $permission !== null) {
+            $role->permissions()->syncWithoutDetaching([$permission->id]);
+            $role->load('permissions');
+            $this->clearPermissionCache();
+            return $this->roleHasPermission($roleName, $permissionName);
+        }
+
+        return false;
+    }
+
+    /**
      * Revokes a role from the user.
      *
      * @param User $user
