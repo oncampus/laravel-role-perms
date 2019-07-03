@@ -46,6 +46,10 @@ class RoleAssignTest extends TestCase
         $revokedPerm = RolePerms::revokePermission($roleName, $permissionName);
         $this->assertTrue($revokedPerm);
 
+        # DELETE PERMISSION
+        $deletedPermission = RolePerms::deletePermission($permissionName);
+        $this->assertTrue($deletedPermission);
+
         # REVOKE ROLE
         $revokedRole = RolePerms::revokeRole($testUser, $roleName);
         $this->assertTrue($revokedRole);
