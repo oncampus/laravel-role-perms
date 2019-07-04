@@ -23,6 +23,16 @@ class Seeds extends Seeder
             Permission::firstOrCreate(['name' => 'permissions.create'])->id,
             Permission::firstOrCreate(['name' => 'permissions.edit'])->id,
             Permission::firstOrCreate(['name' => 'permissions.delete'])->id,
+            Permission::firstOrCreate(['name' => 'roles.show'])->id,
+            Permission::firstOrCreate(['name' => 'roles.create'])->id,
+            Permission::firstOrCreate(['name' => 'roles.edit'])->id,
+            Permission::firstOrCreate(['name' => 'roles.delete'])->id,
+            Permission::firstOrCreate(['name' => 'roles.assigns.show'])->id,
+            Permission::firstOrCreate(['name' => 'roles.assigns.create'])->id,
+            Permission::firstOrCreate(['name' => 'roles.assigns.delete'])->id,
+            Permission::firstOrCreate(['name' => 'permissions.assigns.show'])->id,
+            Permission::firstOrCreate(['name' => 'permissions.assigns.create'])->id,
+            Permission::firstOrCreate(['name' => 'permissions.assigns.delete'])->id,
         ];
 
         $roleAdmin->permissions()->syncWithoutDetaching($permissions);

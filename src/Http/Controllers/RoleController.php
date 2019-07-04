@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use kevinberg\LaravelRolePerms\Models\Role;
 use kevinberg\LaravelRolePerms\Models\Permission;
+use kevinberg\LaravelRolePerms\Facades\RolePerms;
+use Illuminate\Support\Facades\Auth;
 
 class RoleController extends Controller
 {
@@ -17,10 +19,14 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = Role::all();
-        return view('LaravelRolePerms::roles', [
-            'roles' => $roles
-        ]);
+        if(Auth::check() && Auth::user()->hasPermission('roles.show')) {
+            $roles = Role::all();
+            return view('LaravelRolePerms::roles', [
+                'roles' => $roles
+            ]);
+        }
+
+        return redirect(config('role_perms.redirect_route_on_fail'));
     }
 
     /**
@@ -31,15 +37,19 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|unique:roles'
-        ]);
+        if(Auth::check() && Auth::user()->hasPermission('roles.create')) {
+            $request->validate([
+                'name' => 'required|unique:roles'
+            ]);
 
-        $role = new Role();
-        $role->name = $request->name;
-        $role->save();
+            $role = new Role();
+            $role->name = $request->name;
+            $role->save();
 
-        return redirect()->route('roles.index');
+            return redirect()->route('roles.index');
+        }
+
+        return redirect(config('role_perms.redirect_route_on_fail'));
     }
 
     /**
@@ -50,19 +60,24 @@ class RoleController extends Controller
      */
     public function show($id)
     {
-        if(empty($id) || ! is_numeric($id)) {
-            return abort(404);
+        if(Auth::check() && Auth::user()->hasPermission('roles.show')) {
+
+            if(empty($id) || ! is_numeric($id)) {
+                return abort(404);
+            }
+
+            $role = Role::findOrFail($id);
+            $permissions = Permission::all();
+            $users = User::all();
+
+            return view('LaravelRolePerms::role', [
+                'role' => $role,
+                'permissions' => $permissions,
+                'users' => $users
+            ]);
         }
 
-        $role = Role::findOrFail($id);
-        $permissions = Permission::all();
-        $users = User::all();
-
-        return view('LaravelRolePerms::role', [
-            'role' => $role,
-            'permissions' => $permissions,
-            'users' => $users
-        ]);
+        return redirect(config('role_perms.redirect_route_on_fail'));
     }
 
 
@@ -76,31 +91,37 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'name' => 'string|min:3|unique:permissions',
-            'permissions' => 'array',
-            'permissions.*' => 'exists:permissions,id',
-            'users' => 'array',
-            'users.*' => 'exists:users,id',
-            'responsible_users' => 'array',
-            'responsible_users.*' => 'exists:users,id'
-        ]);
+        if( Auth::check() &&
+            Auth::user()->hasPermission('roles.edit') &&
+            Auth::user()->hasPermission('roles.assigns.create') &&
+            Auth::user()->hasPermission('permissions.assigns.create')) {
 
-        $role = Role::findOrFail($id);
-        $role->name = $request->name;
-        $role->permissions()->sync($request->permissions);
-        $role->users()->sync($request->users);
-        $role->responsibleUsers()->sync($request->responsible_users);
-        $role->save();
+            $request->validate([
+                'permissions' => 'array',
+                'permissions.*' => 'exists:permissions,id',
+                'users' => 'array',
+                'users.*' => 'exists:users,id',
+                'responsible_users' => 'array',
+                'responsible_users.*' => 'exists:users,id'
+            ]);
 
-        $permissions = Permission::all();
-        $users = User::all();
+            $role = Role::findOrFail($id);
+            $role->permissions()->sync($request->permissions);
+            $role->users()->sync($request->users);
+            $role->responsibleUsers()->sync($request->responsible_users);
+            $role->save();
 
-        return view('LaravelRolePerms::role', [
-            'role' => $role,
-            'permissions' => $permissions,
-            'users' => $users
-        ]);
+            $permissions = Permission::all();
+            $users = User::all();
+
+            return view('LaravelRolePerms::role', [
+                'role' => $role,
+                'permissions' => $permissions,
+                'users' => $users
+            ]);
+        }
+
+        return redirect(config('role_perms.redirect_route_on_fail'));
     }
 
     /**
@@ -111,9 +132,14 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        $role = Role::findOrFail($id);
-        $role->delete();
+        if(Auth::check() && Auth::user()->hasPermission('roles.delete')) {
 
-        return redirect()->route('roles.index');
+            $role = Role::findOrFail($id);
+            $role->delete();
+
+            return redirect()->route('roles.index');
+        }
+
+        return redirect(config('role_perms.redirect_route_on_fail'));
     }
 }

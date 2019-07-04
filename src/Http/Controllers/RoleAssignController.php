@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use kevinberg\LaravelRolePerms\Models\Role;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class RoleAssignController extends Controller
 {
@@ -17,10 +18,16 @@ class RoleAssignController extends Controller
      */
     public function index()
     {
-        $roleAssigns = DB::table('role_assign')->get();
-        return view('LaravelRolePerms::role_assigns', [
-            'roleAssigns' => $roleAssigns
-        ]);
+        if(Auth::check() && Auth::user()->hasPermission('roles.assigns.show')) {
+
+            $roleAssigns = DB::table('role_assign')->get();
+            return view('LaravelRolePerms::role_assigns', [
+                'roleAssigns' => $roleAssigns
+            ]);
+
+        }
+
+        return redirect(config('role_perms.redirect_route_on_fail'));
     }
 
     /**
@@ -31,20 +38,26 @@ class RoleAssignController extends Controller
      */
     public function show(int $id)
     {
-        $roleAssign = DB::table('role_assign')->where('id', $id)->first();
+        if(Auth::check() && Auth::user()->hasPermission('roles.assigns.show')) {
 
-        if($roleAssign === null) {
-            abort(404);
+            $roleAssign = DB::table('role_assign')->where('id', $id)->first();
+
+            if($roleAssign === null) {
+                abort(404);
+            }
+
+            $user = User::where('id', $roleAssign->user_id)->first();
+            $role = Role::where('id', $roleAssign->role_id)->first();
+
+            return view('LaravelRolePerms::role_assign', [
+                'roleAssign' => $roleAssign,
+                'user' => $user,
+                'role' => $role
+            ]);
+
         }
 
-        $user = User::where('id', $roleAssign->user_id)->first();
-        $role = Role::where('id', $roleAssign->role_id)->first();
-
-        return view('LaravelRolePerms::role_assign', [
-            'roleAssign' => $roleAssign,
-            'user' => $user,
-            'role' => $role
-        ]);
+        return redirect(config('role_perms.redirect_route_on_fail'));
     }
 
     /**
@@ -56,25 +69,31 @@ class RoleAssignController extends Controller
      */
     public function update(Request $request,int $id)
     {
-        $request->validate([
-            'entity_type' => 'string|nullable',
-            'entity_id' => 'integer|nullable'
-        ]);
+        if(Auth::check() && Auth::user()->hasPermission('roles.assigns.edit')) {
 
-        $roleAssign = DB::table('role_assign')->where('id', $id)->first();
+            $request->validate([
+                'entity_type' => 'string|nullable',
+                'entity_id' => 'integer|nullable'
+            ]);
 
-        if($roleAssign === null) {
-            abort(404);
+            $roleAssign = DB::table('role_assign')->where('id', $id)->first();
+
+            if($roleAssign === null) {
+                abort(404);
+            }
+
+            DB::table('role_assign')->where('id', $id)->update([
+                'entity_type' => $request->entity_type,
+                'entity_id' => $request->entity_id
+            ]);
+
+            return redirect()->route('role_assigns.show', [
+                'id' => $id
+            ]);
+
         }
 
-        DB::table('role_assign')->where('id', $id)->update([
-            'entity_type' => $request->entity_type,
-            'entity_id' => $request->entity_id
-        ]);
-
-        return redirect()->route('role_assigns.show', [
-            'id' => $id
-        ]);
+        return redirect(config('role_perms.redirect_route_on_fail'));
     }
 
     /**
@@ -85,7 +104,13 @@ class RoleAssignController extends Controller
      */
     public function destroy($id)
     {
-        DB::table('role_assign')->where('id', $id)->delete();
-        return redirect()->route('role_assigns.index');
+        if(Auth::check() && Auth::user()->hasPermission('roles.assigns.delete')) {
+
+            DB::table('role_assign')->where('id', $id)->delete();
+            return redirect()->route('role_assigns.index');
+
+        }
+
+        return redirect(config('role_perms.redirect_route_on_fail'));
     }
 }

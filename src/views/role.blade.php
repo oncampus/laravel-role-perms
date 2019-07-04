@@ -22,11 +22,6 @@
         @method('PATCH')
 
         <div>
-            <label for="name">Role name</label>
-            <input type="text" name="name" placeholder="Role name" value="{{ $role->name }}"/>
-        </div>
-
-        <div>
             <label for="permissions">Permissions</label>
             <select multiple id="permissions" name="permissions[]">
                 @foreach($permissions as $permission)

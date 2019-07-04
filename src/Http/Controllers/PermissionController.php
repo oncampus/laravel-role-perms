@@ -16,8 +16,14 @@ class PermissionController extends Controller
      */
     public function index()
     {
-        $permissions = Permission::all();
-        return view('LaravelRolePerms::permissions', ['permissions' => $permissions]);
+        if(Auth::check() && Auth::user()->hasPermission('permissions.show')) {
+            $permissions = Permission::all();
+            return view('LaravelRolePerms::permissions', [
+                'permissions' => $permissions
+            ]);
+        }
+
+        return redirect(config('role_perms.redirect_route_on_fail'));
     }
 
     /**
@@ -28,15 +34,21 @@ class PermissionController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|unique:permissions'
-        ]);
+        if(Auth::check() && Auth::user()->hasPermission('permissions.create')) {
 
-        $permission = new Permission();
-        $permission->name = $request->name;
-        $permission->save();
+            $request->validate([
+                'name' => 'required|unique:permissions'
+            ]);
 
-        return redirect()->route('permissions.index');
+            $permission = new Permission();
+            $permission->name = $request->name;
+            $permission->save();
+
+            return redirect()->route('permissions.index');
+
+        }
+
+        return redirect(config('role_perms.redirect_route_on_fail'));
     }
 
     /**
@@ -47,34 +59,22 @@ class PermissionController extends Controller
      */
     public function show($id)
     {
-        if(empty($id) || ! is_numeric($id)) {
-            return abort(404);
+        if(Auth::check() && Auth::user()->hasPermission('permissions.show')) {
+
+            if(empty($id) || ! is_numeric($id)) {
+                return abort(404);
+            }
+
+            $permission = Permission::findOrFail($id);
+
+            return view('LaravelRolePerms::permission', [
+                'permission' => $permission
+            ]);
+
         }
 
-        $permission = Permission::findOrFail($id);
-        return view('LaravelRolePerms::permission', ['permission' => $permission]);
-    }
+        return redirect(config('role_perms.redirect_route_on_fail'));
 
-
-    /**
-     * Update the specified resource in storage.
-     * TODO remove this route and function!
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'name' => 'required|unique:permissions'
-        ]);
-
-        $permission = Permission::findOrFail($id);
-        $permission->name = $request->name;
-        $permission->save();
-
-        return view('LaravelRolePerms::permission', ['permission' => $permission]);
     }
 
     /**
@@ -85,9 +85,14 @@ class PermissionController extends Controller
      */
     public function destroy($id)
     {
-        $permission = Permission::findOrFail($id);
-        $permission->delete();
+        if(Auth::check() && Auth::user()->hasPermission('permissions.delete')) {
 
-        return redirect()->route('permissions.index');
+            $permission = Permission::findOrFail($id);
+            $permission->delete();
+            return redirect()->route('permissions.index');
+
+        }
+
+        return redirect(config('role_perms.redirect_route_on_fail'));
     }
 }

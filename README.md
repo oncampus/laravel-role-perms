@@ -17,4 +17,4 @@ Inside the user class use the trait:
 
     php artisan db:seed --class=kevinberg\LaravelRolePerms\Database\Seeds
 
-By default the following seeder creates the admin role and the * permission. If there is a user with the name admin, then by default he gets the role admin.
+By default the following seeder creates the admin role and some permission. If there is a user with the name admin, then by default he gets the role admin.
