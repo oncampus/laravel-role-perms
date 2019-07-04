@@ -30,14 +30,14 @@ class ApiPermissionRoutesTest extends TestCase
     {
         Cache::flush();
         $user = User::firstOrCreate($this->userData);
-
-        Role::firstOrCreate(['name' => $this->roleName]);
+        $testRole = Role::firstOrCreate(['name' => $this->roleName]);
         Permission::firstOrCreate(['name' => 'permissions.show']);
         RolePerms::grantPermission($this->roleName, 'permissions.show');
         RolePerms::grantRole($user, $this->roleName);
 
         $response = $this->actingAs($user, 'api')->call('GET', '/api/permissions/');
         $this->assertEquals(200, $response->status());
+        $testRole->permissions()->sync([]);
         RolePerms::revokeRole($user, $this->roleName);
         Cache::flush();
     }
@@ -50,8 +50,7 @@ class ApiPermissionRoutesTest extends TestCase
     public function testCreatePermissions()
     {
         $user = User::firstOrCreate($this->userData);
-
-        Role::firstOrCreate(['name' => $this->roleName]);
+        $testRole = Role::firstOrCreate(['name' => $this->roleName]);
         Permission::firstOrCreate(['name' => 'permissions.create']);
         RolePerms::grantPermission($this->roleName, 'permissions.create');
         RolePerms::grantRole($user, $this->roleName);
@@ -65,33 +64,7 @@ class ApiPermissionRoutesTest extends TestCase
                     ->call('POST', '/api/permissions/', ['name' => 'just_a_test_permission!']);
 
         $this->assertEquals(201, $response->status());
-        RolePerms::revokeRole($user, $this->roleName);
-    }
-
-    /**
-     * Tests the update route for permissions.
-     *
-     * @return void
-     */
-    public function testUpdatePermission()
-    {
-        $user = User::firstOrCreate($this->userData);
-        Role::firstOrCreate(['name' => $this->roleName]);
-        Permission::firstOrCreate(['name' => 'permissions.edit']);
-        RolePerms::grantPermission($this->roleName, 'permissions.edit');
-        RolePerms::grantRole($user, $this->roleName);
-
-        $permission = Permission::firstOrCreate(['name' => 'just_a_test_permission!']);
-
-        $response = $this->actingAs($user, 'api')
-                    ->call('PATCH', '/api/permissions/'.$permission->id, ['name' => 'just_a_permission...']);
-
-        $this->assertEquals(201, $response->status());
-
-        $permission = Permission::where(['name' => 'just_a_permission...'])->first();
-        $this->assertEquals($permission->name, 'just_a_permission...');
-
-        $permission->delete();
+        $testRole->permissions()->sync([]);
         RolePerms::revokeRole($user, $this->roleName);
     }
 
@@ -103,7 +76,7 @@ class ApiPermissionRoutesTest extends TestCase
     public function testDeletePermission()
     {
         $user = User::firstOrCreate($this->userData);
-        Role::firstOrCreate(['name' => $this->roleName]);
+        $testRole = Role::firstOrCreate(['name' => $this->roleName]);
         Permission::firstOrCreate(['name' => 'permissions.delete']);
         RolePerms::grantPermission($this->roleName, 'permissions.delete');
         RolePerms::grantRole($user, $this->roleName);
@@ -117,6 +90,7 @@ class ApiPermissionRoutesTest extends TestCase
 
         $permission = Permission::where(['name' => 'just_a_test_permission!'])->first();
         $this->assertNull($permission);
+        $testRole->permissions()->sync([]);
         RolePerms::revokeRole($user, $this->roleName);
     }
 

@@ -72,36 +72,6 @@ class PermissionController extends Controller
         return response(null, 401);
     }
 
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        if(Auth::check() && Auth::user()->hasPermission('permissions.edit')) {
-
-            $request->validate([
-                'name' => 'required|unique:permissions'
-            ]);
-
-            $permission = Permission::findOrFail($id);
-            $permission->name = $request->name;
-            $saved = $permission->save();
-
-            if($saved) {
-                return response()->json($permission, 201);
-            } else {
-                return response(null, 422);
-            }
-        }
-
-        return response(null, 401);
-    }
-
     /**
      * Remove the specified resource from storage.
      *
