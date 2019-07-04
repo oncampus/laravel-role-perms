@@ -11,6 +11,6 @@ Route::group([
             'index', 'store', 'show', 'destroy'
         ]);
         Route::resource('role_assigns', 'RoleAssignController')->only([
-            'index', 'store', 'show', 'destroy'
+            'index', 'store', 'destroy'
         ]);
 });
