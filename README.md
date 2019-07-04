@@ -129,7 +129,7 @@ Now you can use the following functions:
 
 	RolePerms::createRole(String  $roleName); // Role || false
 
-	RolePerms::createPermission(String  $permissionName); Permission || false
+	RolePerms::createPermission(String  $permissionName); // Permission || false
 
 	RolePerms::deleteRole(String  $roleName); // true || false
 
