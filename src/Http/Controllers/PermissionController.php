@@ -58,6 +58,7 @@ class PermissionController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * TODO remove this route and function!
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  $id
