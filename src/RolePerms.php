@@ -10,82 +10,6 @@ use kevinberg\LaravelRolePerms\Models\Permission;
 class RolePerms
 {
     /**
-     * Checks if the current User has a role.
-     * The results will be cached.
-     *
-     * @param String $roleName
-     * @return boolean
-     */
-    public function hasRole(String $roleName): bool
-    {
-        if(Auth::check()) {
-
-            $user = Auth::user();
-            $roleCache = Cache::get(config('role_perms.roles_cache_key'));
-
-            if(is_null($roleCache) || !is_array($roleCache)) {
-                $roleCache = array();
-            }
-
-            # try to get the result from cache.
-            if(array_key_exists($user->id, $roleCache)) {
-                if(is_array($roleCache[$user->id]) && array_key_exists($roleName, $roleCache[$user->id])) {
-                    return $roleCache[$user->id][$roleName];
-                }
-            }
-
-            # calculate result and store it in the cache.
-            $role = Role::where('name', $roleName)->first();
-            if($role) {
-                $userHasRole = $this->userHasRole($user, $roleName);
-                $roleCache[$user->id][$roleName] = $userHasRole;
-                Cache::forever(config('role_perms.roles_cache_key'), $roleCache);
-                return $userHasRole;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Checks if the current User has a permission.
-     * The results will be cached.
-     *
-     * @param String $roleName
-     * @return boolean
-     */
-    public function hasPermission(String $permissionName): bool
-    {
-        if(Auth::check()) {
-
-            $user = Auth::user();
-            $permCache = Cache::get(config('role_perms.perms_cache_key'));
-
-            if(is_null($permCache) || !is_array($permCache)) {
-                $permCache = array();
-            }
-
-            # try to get the result from cache.
-            if(array_key_exists($user->id, $permCache)) {
-                if(is_array($permCache[$user->id]) && array_key_exists($permissionName, $permCache[$user->id])) {
-                    return $permCache[$user->id][$permissionName];
-                }
-            }
-
-            # calculate result and store it in the cache.
-            $permission = Permission::where('name', $permissionName)->first();
-            if($permission) {
-                $userHasPerm = $this->userHasPermission($user, $permissionName);
-                $permCache[$user->id][$permissionName] = $userHasPerm;
-                Cache::forever(config('role_perms.perms_cache_key'), $permCache);
-                return $userHasPerm;
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * Checks if a specific user has a specific role.
      * The results won't be cached!
      *
@@ -229,8 +153,9 @@ class RolePerms
             $permission = Permission::where('name', $permissionName)->first();
 
             if($role !== null && $permission !== null) {
-                $this->clearPermissionCache();
                 $role->permissions()->detach($permission->id);
+                $role->load('permissions');
+                $this->clearPermissionCache();
                 return !($this->roleHasPermission($roleName, $permissionName));
             }
         }

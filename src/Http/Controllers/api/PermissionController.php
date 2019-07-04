@@ -17,7 +17,7 @@ class PermissionController extends Controller
      */
     public function index()
     {
-        if(Auth::check() && RolePerms::hasPermission('show_perms')) {
+        if(Auth::check() && Auth::user()->hasPermission('permissions.show')) {
             $permissions = Permission::all();
             return response()->json($permissions, 200);
         }
@@ -33,7 +33,7 @@ class PermissionController extends Controller
      */
     public function store(Request $request)
     {
-        if(Auth::check() && RolePerms::hasPermission('create_perms')) {
+        if(Auth::check() && Auth::user()->hasPermission('permissions.create')) {
 
             $request->validate([
                 'name' => 'required|unique:permissions'
@@ -59,7 +59,7 @@ class PermissionController extends Controller
      */
     public function show($id)
     {
-        if(Auth::check() && RolePerms::hasPermission('show_perms')) {
+        if(Auth::check() && Auth::user()->hasPermission('permissions.show')) {
 
             if(empty($id) || ! is_numeric($id)) {
                 return abort(404);
@@ -82,7 +82,7 @@ class PermissionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if(Auth::check() && RolePerms::hasPermission('edit_perms')) {
+        if(Auth::check() && Auth::user()->hasPermission('permissions.edit')) {
 
             $request->validate([
                 'name' => 'required|unique:permissions'
@@ -110,7 +110,7 @@ class PermissionController extends Controller
      */
     public function destroy($id)
     {
-        if(Auth::check() && RolePerms::hasPermission('delete_perms')) {
+        if(Auth::check() && Auth::user()->hasPermission('permissions.delete')) {
             $permission = Permission::findOrFail($id);
             $deleted = $permission->delete();
 
