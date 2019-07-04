@@ -13,4 +13,7 @@ Route::group([
         Route::resource('role_assigns', 'RoleAssignController')->only([
             'index', 'store', 'destroy'
         ]);
+        Route::resource('permission_assigns', 'PermissionAssignController')->only([
+            'index', 'store', 'destroy'
+        ]);
 });

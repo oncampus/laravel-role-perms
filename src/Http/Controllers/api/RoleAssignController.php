@@ -70,6 +70,11 @@ class RoleAssignController extends Controller
     public function destroy($id)
     {
         if(Auth::check() && Auth::user()->hasPermission('roles.assigns.delete')) {
+
+            if(!is_numeric($id)) {
+                abort(400);
+            }
+
             DB::table('role_assign')->where('id', $id)->delete();
             return response(null, 204);
         }

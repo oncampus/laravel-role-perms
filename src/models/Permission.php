@@ -14,6 +14,6 @@ class Permission extends Model
      */
     public function roles()
     {
-        return $this->belongsToMany('kevinberg\LaravelRolePerms\Models\Role', 'role_permissions');
+        return $this->belongsToMany('kevinberg\LaravelRolePerms\Models\Role', 'role_permissions')->withPivot('id');;
     }
 }
