@@ -96,7 +96,7 @@ By default the following seeder creates the admin role and some permission. If t
 To check if a user model has a permission or a role you can use this:
 
     $user->hasPermission('permissionName'); // true || false
-    $user->hasRole('roleName'); 			// true || false
+    $user->hasRole('roleName'); // true || false
 
 The user function results will be cached!
 Use `RolePerms::clearPermissionCache();` or `RolePerms::clearRoleCache();` to clean up if needed.
