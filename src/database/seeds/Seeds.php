@@ -15,21 +15,17 @@ class Seeds extends Seeder
      */
     public function run()
     {
-        $roleAdmin = Role::where('name', 'admin')->first();
-        if(!$roleAdmin) {
-            $roleAdmin = new Role();
-            $roleAdmin->name = 'admin';
-            $roleAdmin->save();
-        }
+        $roleAdmin = Role::firstOrCreate(['name' => 'admin']);
 
-        $wildcardPerm = Permission::where('name', '*')->first();
-        if(!$wildcardPerm) {
-            $wildcardPerm = new Permission();
-            $wildcardPerm->name = '*';
-            $wildcardPerm->save();
-        }
+        $permissions = [
+            Permission::firstOrCreate(['name' => '*'])->id,
+            Permission::firstOrCreate(['name' => 'permissions.show'])->id,
+            Permission::firstOrCreate(['name' => 'permissions.create'])->id,
+            Permission::firstOrCreate(['name' => 'permissions.edit'])->id,
+            Permission::firstOrCreate(['name' => 'permissions.delete'])->id,
+        ];
 
-        $roleAdmin->permissions()->attach($wildcardPerm);
+        $roleAdmin->permissions()->syncWithoutDetaching($permissions);
 
         $admin = User::where('name', 'admin')->first();
         if(is_object($admin) && isset($admin->id)) {
