@@ -14,7 +14,9 @@ class Role extends Model
      */
     public function permissions()
     {
-        return $this->belongsToMany('kevinberg\LaravelRolePerms\Models\Permission', 'role_permissions')->withPivot('id');
+        return $this->belongsToMany('kevinberg\LaravelRolePerms\Models\Permission', 'role_permissions')
+            ->withPivot('id')
+            ->withTimestamps();
     }
 
     /**
@@ -22,7 +24,9 @@ class Role extends Model
      */
     public function users()
     {
-        return $this->belongsToMany('App\User', 'role_assign')->withPivot('id', 'entity_type', 'entity_id');
+        return $this->belongsToMany('App\User', 'role_assign')
+            ->withPivot('id', 'entity_type', 'entity_id')
+            ->withTimestamps();
     }
 
     /**
@@ -30,7 +34,9 @@ class Role extends Model
      */
     public function responsibleUsers()
     {
-        return $this->belongsToMany('App\User', 'role_responsibilities');
+        return $this->belongsToMany('App\User', 'role_responsibilities')
+            ->withPivot('id')
+            ->withTimestamps();
     }
 
 }

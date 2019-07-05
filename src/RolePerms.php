@@ -2,6 +2,7 @@
 
 namespace kevinberg\LaravelRolePerms;
 use \App\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use kevinberg\LaravelRolePerms\Models\Role;
@@ -17,11 +18,45 @@ class RolePerms
      * @param String $roleName
      * @return boolean
      */
-    public function userHasRole(User $user, String $roleName): bool
+    public function userHasRole(User $user, String $roleName, $entity = false): bool
     {
         if($user->roles && ! $user->roles->isEmpty()) {
-            return $user->roles->contains('name', $roleName);
+
+            if(is_object($entity)) {
+
+                $entityType = get_class($entity);
+                $entityId = $entity->id;
+
+            } else {
+
+                /**
+                 * $entityType and $entityId with null
+                 * means we search for a globally valid role
+                 * and not an assignment just for a specific
+                 * entity.
+                 */
+                $entityType = null;
+                $entityId = null;
+            }
+
+            $role = $user->roles->where('name', $roleName)->first();
+
+            if($role !== null) {
+
+                /**
+                 * If there is no global role assignment
+                 * search for the assignment with the entity.
+                 */
+                $assignment = DB::table('role_assign')->where([
+                    'role_id' => $role->id,
+                    'entity_type' => $entityType,
+                    'entity_id' => $entityId
+                ])->first();
+
+                return ($assignment !== null);
+            }
         }
+
         return false;
     }
 
@@ -33,15 +68,54 @@ class RolePerms
      * @param String $permissionName
      * @return boolean
      */
-    public function userHasPermission(User $user, String $permissionName): bool
+    public function userHasPermission(User $user, String $permissionName, $entity = false): bool
     {
         if($user->roles && ! $user->roles->isEmpty()) {
-            foreach($user->roles as $role) {
-                if($role->permissions->contains('name', $permissionName)) {
+            if(is_object($entity)) {
+                /**
+                 * If we search a permission for a specific
+                 * entity than we should first search for a global
+                 * role assignment whith the permission.
+                 */
+                $globalAssignment = $this->userHasPermission($user, $permissionName, false);
+                if($globalAssignment) {
                     return true;
+                }
+
+                $entityType = get_class($entity);
+                $entityId = $entity->id;
+
+            } else {
+                /**
+                 * $entityType and $entityId with null
+                 * means we search for a globally valid role
+                 * and not an assignment just for a specific
+                 * entity.
+                 */
+                $entityType = null;
+                $entityId = null;
+            }
+
+            foreach($user->roles as $role) {
+                # check if the current role has the permission
+                if($role->permissions->contains('name', $permissionName)) {
+                    /**
+                     * If there is no global role with the permission
+                     * search for the role assignment for the entity.
+                     */
+                    $assignment = DB::table('role_assign')->where([
+                        'role_id' => $role->id,
+                        'entity_type' => $entityType,
+                        'entity_id' => $entityId
+                    ])->first();
+
+                    if($assignment !== null) {
+                        return true;
+                    }
                 }
             }
         }
+
         return false;
     }
 
@@ -71,19 +145,30 @@ class RolePerms
      * @param String $roleName
      * @return boolean
      */
-    public function grantRole(User $user, String $roleName): bool
+    public function grantRole(User $user, String $roleName, $entity = false): bool
     {
-        if($this->userHasRole($user, $roleName)) {
+        if($this->userHasRole($user, $roleName, $entity)) {
             return true;
         }
 
         $role = Role::where('name', $roleName)->first();
 
         if($role) {
-            $user->roles()->syncWithoutDetaching([$role->id]);
+            $assignment = array();
+            if($entity !== false && is_object($entity)) {
+                $assignment = [$role->id => [
+                    'entity_type' => get_class($entity),
+                    'entity_id' => $entity->id
+                ]];
+            } else {
+                $assignment = [$role->id];
+            }
+
+            $user->roles()->syncWithoutDetaching($assignment);
             $user->load('roles');
             $this->clearRoleCache();
-            return $this->userHasRole($user, $roleName);
+
+            return $this->userHasRole($user, $roleName, $entity);
         }
 
         return false;

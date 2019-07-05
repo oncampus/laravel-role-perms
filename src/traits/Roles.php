@@ -15,27 +15,18 @@ trait Roles
      * @param String $roleName
      * @return boolean
      */
-    public function hasRole(String $roleName): bool
+    public function hasRole(String $roleName, $entity = false): bool
     {
-        $roleCache = Cache::get(config('role_perms.roles_cache_key'));
+        # Todo use the cache!
+        # $roleCache = Cache::get(config('role_perms.roles_cache_key'));
 
-        if(is_null($roleCache) || !is_array($roleCache)) {
-            $roleCache = array();
-        }
-
-        # try to get the result from cache.
-        if(array_key_exists($this->id, $roleCache)) {
-            if(is_array($roleCache[$this->id]) && array_key_exists($roleName, $roleCache[$this->id])) {
-                return $roleCache[$this->id][$roleName];
-            }
-        }
-
-        # calculate result and store it in the cache.
         $role = Role::where('name', $roleName)->first();
+
         if($role) {
-            $userHasRole = RolePerms::userHasRole($this, $roleName);
-            $roleCache[$this->id][$roleName] = $userHasRole;
-            Cache::forever(config('role_perms.roles_cache_key'), $roleCache);
+
+            $userHasRole = RolePerms::userHasRole($this, $roleName, $entity);
+            # Todo fill the cache here
+
             return $userHasRole;
         }
 
@@ -48,27 +39,18 @@ trait Roles
      * @param String $permissionName
      * @return boolean
      */
-    public function hasPermission(String $permissionName): bool
+    public function hasPermission(String $permissionName, $entity = false): bool
     {
-        $permCache = Cache::get(config('role_perms.perms_cache_key'));
+        # Todo use the cache!
+        # $permCache = Cache::get(config('role_perms.perms_cache_key'));
 
-        if(is_null($permCache) || !is_array($permCache)) {
-            $permCache = array();
-        }
-
-        # try to get the result from cache.
-        if(array_key_exists($this->id, $permCache)) {
-            if(is_array($permCache[$this->id]) && array_key_exists($permissionName, $permCache[$this->id])) {
-                return $permCache[$this->id][$permissionName];
-            }
-        }
-
-        # calculate result and store it in the cache.
         $permission = Permission::where('name', $permissionName)->first();
+
         if($permission) {
-            $userHasPerm = RolePerms::userHasPermission($this, $permissionName);
-            $permCache[$this->id][$permissionName] = $userHasPerm;
-            Cache::forever(config('role_perms.perms_cache_key'), $permCache);
+
+            $userHasPerm = RolePerms::userHasPermission($this, $permissionName, $entity);
+            # Todo fill the cache here
+
             return $userHasPerm;
         }
 
@@ -80,7 +62,9 @@ trait Roles
      */
     public function roles()
     {
-        return $this->belongsToMany('kevinberg\LaravelRolePerms\Models\Role', 'role_assign')->withPivot('id', 'entity_type', 'entity_id');
+        return $this->belongsToMany('kevinberg\LaravelRolePerms\Models\Role', 'role_assign')
+            ->withPivot('id', 'entity_type', 'entity_id')
+            ->withTimestamps();
     }
 
     /**
@@ -88,6 +72,8 @@ trait Roles
      */
     public function roleResponsibilities()
     {
-        return $this->belongsToMany('kevinberg\LaravelRolePerms\Models\Role', 'role_responsibilities');
+        return $this->belongsToMany('kevinberg\LaravelRolePerms\Models\Role', 'role_responsibilities')
+            ->withPivot('id')
+            ->withTimestamps();
     }
 }
