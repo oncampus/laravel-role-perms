@@ -80,9 +80,9 @@ Now you can use the following functions:
 
 	RolePerms::revokePermission(String  $roleName, String  $permissionName); // true || false
 
-	RolePerms::clearRoleCache(); // true || false
+	RolePerms::clearRoleCache([User $user]); // true || false
 
-	RolePerms::clearPermissionCache(); // true || false
+	RolePerms::clearPermissionCache([User $user]); // true || false
 
 	RolePerms::createRole(String  $roleName); // Role || false
 
