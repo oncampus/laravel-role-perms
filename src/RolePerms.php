@@ -169,7 +169,7 @@ class RolePerms
 
             $user->roles()->syncWithoutDetaching($assignment);
             $user->load('roles');
-            $this->clearRoleCache();
+            $this->clearRoleCache($user);
 
             return $this->userHasRole($user, $roleName, $entity);
         }
@@ -232,7 +232,7 @@ class RolePerms
                 ])->delete();
 
                 $user->load('roles');
-                $this->clearRoleCache();
+                $this->clearRoleCache($user);
                 return !($this->userHasRole($user, $roleName, $entity));
             }
 
