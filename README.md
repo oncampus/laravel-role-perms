@@ -56,7 +56,7 @@ To check if a user model has a permission or a role you can use this:
     $user->hasRole('roleName', [Object $entity]); // true || false
 
 The user function results will be cached!
-Use `RolePerms::clearPermissionCache();` or `RolePerms::clearRoleCache();` to clean up if needed.
+Use `RolePerms::clearPermissionCache([User $user]);` or `RolePerms::clearRoleCache([User $user]);` to clean up if needed.
 
 ### Facade
 
