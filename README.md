@@ -52,8 +52,8 @@ By default the following seeder creates the admin role and some permission. If t
 
 To check if a user model has a permission or a role you can use this:
 
-    $user->hasPermission('permissionName'); // true || false
-    $user->hasRole('roleName'); // true || false
+    $user->hasPermission('permissionName', [Object $entity]); // true || false
+    $user->hasRole('roleName', [Object $entity]); // true || false
 
 The user function results will be cached!
 Use `RolePerms::clearPermissionCache();` or `RolePerms::clearRoleCache();` to clean up if needed.
@@ -66,17 +66,17 @@ Include the Facade to use the following functions.
 
 Now you can use the following functions:
 
-    RolePerms::userHasRole(User  $user, String  $roleName); // true || false
+    RolePerms::userHasRole(User  $user, String  $roleName, [Object $entity]); // true || false
 
-    RolePerms::userHasPermission(User  $user, String  $permissionName); // true || false
+    RolePerms::userHasPermission(User  $user, String  $permissionName, [Object $entity]); // true || false
 
 	RolePerms::roleHasPermission(String  $roleName, String  $permissionName); // true || false
 
-	RolePerms::grantRole(User  $user, String  $roleName); // true || false
+	RolePerms::grantRole(User  $user, String  $roleName, [Object $entity]); // true || false
 
 	RolePerms::grantPermission(String  $roleName, String  $permissionName); // true || false
 
-	RolePerms::revokeRole(User  $user, String  $roleName); // true || false
+	RolePerms::revokeRole(User  $user, String  $roleName, [Object $entity]); // true || false
 
 	RolePerms::revokePermission(String  $roleName, String  $permissionName); // true || false
 

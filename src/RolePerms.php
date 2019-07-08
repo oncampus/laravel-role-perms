@@ -207,15 +207,29 @@ class RolePerms
      * @param String $roleName
      * @return boolean
      */
-    public function revokeRole(User $user, String $roleName): bool
+    public function revokeRole(User $user, String $roleName, $entity = false): bool
     {
         $role = Role::where('name', $roleName)->first();
         if($role !== null) {
-            if($this->userHasRole($user, $roleName)) {
-                $user->roles()->detach($role->id);
+            if($this->userHasRole($user, $roleName, $entity)) {
+
+                if(is_object($entity) && isset($entity->id)) {
+                    $entityType = get_class($entity);
+                    $entityId = $entity->id;
+                } else {
+                    $entityType = null;
+                    $entityId = null;
+                }
+
+                DB::table('role_assign')->where([
+                    'role_id' => $role->id,
+                    'entity_type' => $entityType,
+                    'entity_id' => $entityId
+                ])->delete();
+
                 $user->load('roles');
                 $this->clearRoleCache();
-                return !($this->userHasRole($user, $roleName));
+                return !($this->userHasRole($user, $roleName, $entity));
             }
 
         }
