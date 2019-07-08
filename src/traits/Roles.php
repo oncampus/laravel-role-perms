@@ -100,7 +100,7 @@ trait Roles
                 # build and write cache entry
                 $permCache[$this->id][$permissionName][$entityType][$entityId] = $userHasPerm;
                 Cache::forever(
-                    config('role_perms.roles_cache_key'),
+                    config('role_perms.perms_cache_key'),
                     $permCache
                 );
             }

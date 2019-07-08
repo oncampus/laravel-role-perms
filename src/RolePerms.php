@@ -16,6 +16,7 @@ class RolePerms
      *
      * @param User $user
      * @param String $roleName
+     * @param $entity
      * @return boolean
      */
     public function userHasRole(User $user, String $roleName, $entity = false): bool
@@ -66,6 +67,7 @@ class RolePerms
      *
      * @param User $user
      * @param String $permissionName
+     * @param $entity
      * @return boolean
      */
     public function userHasPermission(User $user, String $permissionName, $entity = false): bool
@@ -143,6 +145,7 @@ class RolePerms
      *
      * @param User $user
      * @param String $roleName
+     * @param $entity
      * @return boolean
      */
     public function grantRole(User $user, String $roleName, $entity = false): bool
@@ -205,6 +208,7 @@ class RolePerms
      *
      * @param User $user
      * @param String $roleName
+     * @param $entity
      * @return boolean
      */
     public function revokeRole(User $user, String $roleName, $entity = false): bool
@@ -263,23 +267,49 @@ class RolePerms
     }
 
     /**
-     * Clears the role cache of a user.
+     * Clears the role cache of a user or globally.
      *
+     * @param User $user
      * @return bool
      */
-    public function clearRoleCache(): bool
+    public function clearRoleCache(User $user = null): bool
     {
-        return Cache::forget(config('role_perms.roles_cache_key'));
+        $cacheKey = config('role_perms.roles_cache_key');
+        if($user !== null) {
+            $cache = Cache::get($cacheKey);
+            if(is_array($cache)) {
+                if(isset($cache[$user->id])) {
+                    unset($cache[$user->id]);
+                    return Cache::forever($cacheKey, $cache);
+                }
+            }
+        } else {
+            return Cache::forget($cacheKey);
+        }
+        return false;
     }
 
     /**
-     * Clears the permission cache of a user.
+     * Clears the permission cache of a user or globally.
      *
+     * @param User $user
      * @return bool
      */
-    public function clearPermissionCache(): bool
+    public function clearPermissionCache(User $user = null): bool
     {
-        return Cache::forget(config('role_perms.perms_cache_key'));
+        $cacheKey = config('role_perms.perms_cache_key');
+        if($user !== null) {
+            $cache = Cache::get($cacheKey);
+            if(is_array($cache)) {
+                if(isset($cache[$user->id])) {
+                    unset($cache[$user->id]);
+                    return Cache::forever($cacheKey, $cache);
+                }
+            }
+        } else {
+            return Cache::forget($cacheKey);
+        }
+        return false;
     }
 
     /**
