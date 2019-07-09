@@ -16,14 +16,14 @@ class RolePerms
      *
      * @param User $user
      * @param String $roleName
-     * @param $entity
+     * @param Object|null $entity
      * @return boolean
      */
-    public function userHasRole(User $user, String $roleName, $entity = false): bool
+    public function userHasRole(User $user, String $roleName, ?Object $entity = null): bool
     {
         if($user->roles && ! $user->roles->isEmpty()) {
 
-            if(is_object($entity)) {
+            if($entity !== null && isset($entity->id)) {
 
                 $entityType = get_class($entity);
                 $entityId = $entity->id;
@@ -67,19 +67,19 @@ class RolePerms
      *
      * @param User $user
      * @param String $permissionName
-     * @param $entity
+     * @param Object|null $entity
      * @return boolean
      */
-    public function userHasPermission(User $user, String $permissionName, $entity = false): bool
+    public function userHasPermission(User $user, String $permissionName, ?Object $entity = null): bool
     {
         if($user->roles && ! $user->roles->isEmpty()) {
-            if(is_object($entity)) {
+            if($entity !== null && isset($entity->id)) {
                 /**
                  * If we search a permission for a specific
                  * entity than we should first search for a global
                  * role assignment whith the permission.
                  */
-                $globalAssignment = $this->userHasPermission($user, $permissionName, false);
+                $globalAssignment = $this->userHasPermission($user, $permissionName, null);
                 if($globalAssignment) {
                     return true;
                 }
@@ -145,10 +145,10 @@ class RolePerms
      *
      * @param User $user
      * @param String $roleName
-     * @param $entity
+     * @param Object|null $entity
      * @return boolean
      */
-    public function grantRole(User $user, String $roleName, $entity = false): bool
+    public function grantRole(User $user, String $roleName, ?Object $entity = null): bool
     {
         if($this->userHasRole($user, $roleName, $entity)) {
             return true;
@@ -158,7 +158,7 @@ class RolePerms
 
         if($role) {
             $assignment = array();
-            if($entity !== false && is_object($entity)) {
+            if($entity !== null && isset($entity->id)) {
                 $assignment = [$role->id => [
                     'entity_type' => get_class($entity),
                     'entity_id' => $entity->id
@@ -204,20 +204,20 @@ class RolePerms
     }
 
     /**
-     * Revokes a role from the user.
+     * Revokes a role of the user.
      *
      * @param User $user
      * @param String $roleName
-     * @param $entity
+     * @param Object|null $entity
      * @return boolean
      */
-    public function revokeRole(User $user, String $roleName, $entity = false): bool
+    public function revokeRole(User $user, String $roleName, ?Object $entity = null): bool
     {
         $role = Role::where('name', $roleName)->first();
         if($role !== null) {
             if($this->userHasRole($user, $roleName, $entity)) {
 
-                if(is_object($entity) && isset($entity->id)) {
+                if($entity !== null && isset($entity->id)) {
                     $entityType = get_class($entity);
                     $entityId = $entity->id;
                 } else {
@@ -243,7 +243,7 @@ class RolePerms
 
     /**
      * Rectracts a permission of a role.
-     * Flushes the cache!
+     * Flushes the permission cache!
      *
      * @param String $roleName
      * @param String $permissionName
@@ -269,10 +269,10 @@ class RolePerms
     /**
      * Clears the role cache of a user or globally.
      *
-     * @param User $user
-     * @return bool
+     * @param User|null $user
+     * @return boolean
      */
-    public function clearRoleCache(User $user = null): bool
+    public function clearRoleCache(?User $user = null): bool
     {
         $cacheKey = config('role_perms.roles_cache_key');
         if($user !== null) {
@@ -292,10 +292,10 @@ class RolePerms
     /**
      * Clears the permission cache of a user or globally.
      *
-     * @param User $user
-     * @return bool
+     * @param User|null $user
+     * @return boolean
      */
-    public function clearPermissionCache(User $user = null): bool
+    public function clearPermissionCache(?User $user = null): bool
     {
         $cacheKey = config('role_perms.perms_cache_key');
         if($user !== null) {

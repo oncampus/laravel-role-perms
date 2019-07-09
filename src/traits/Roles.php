@@ -13,11 +13,11 @@ trait Roles
      * Checks if the user has a specific role.
      *
      * @param String $roleName
-     * @param Object $entity
-     * @param Bool $useCache
+     * @param Object|null $entity
+     * @param boolean $useCache
      * @return boolean
      */
-    public function hasRole(String $roleName, $entity = false, bool $useCache = true): bool
+    public function hasRole(String $roleName, ?Object $entity = null, bool $useCache = true): bool
     {
 
         $roleCache = Cache::get(config('role_perms.roles_cache_key'));
@@ -26,7 +26,7 @@ trait Roles
             $roleCache = [];
         }
 
-        if(is_object($entity) && isset($entity->id)) {
+        if($entity !== null && isset($entity->id)) {
             $entityType = get_class($entity);
             $entityId = $entity->id;
         } else {
@@ -65,9 +65,11 @@ trait Roles
      * Checks if the user has a specific permission.
      *
      * @param String $permissionName
+     * @param Object|null $entity
+     * @param boolean $useCache
      * @return boolean
      */
-    public function hasPermission(String $permissionName, $entity = false, bool $useCache = true): bool
+    public function hasPermission(String $permissionName, ?Object $entity = null, bool $useCache = true): bool
     {
 
         $permCache = Cache::get(config('role_perms.perms_cache_key'));
@@ -76,7 +78,7 @@ trait Roles
             $permCache = [];
         }
 
-        if(is_object($entity) && isset($entity->id)) {
+        if($entity !== null && isset($entity->id)) {
             $entityType = get_class($entity);
             $entityId = $entity->id;
         } else {
