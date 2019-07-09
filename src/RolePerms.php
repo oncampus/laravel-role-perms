@@ -4,7 +4,6 @@ namespace kevinberg\LaravelRolePerms;
 use \App\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Validator;
 use kevinberg\LaravelRolePerms\Models\Role;
 use kevinberg\LaravelRolePerms\Models\Permission;
 
