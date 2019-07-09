@@ -59,18 +59,18 @@ class ApiPermissionAssignRoutesTest extends TestCase
         RolePerms::grantPermission($this->roleName, 'permissions.assigns.create');
         RolePerms::grantRole($user, $this->roleName);
 
-        Permission::firstOrCreate(['name' => 'Great permission!']);
+        Permission::firstOrCreate(['name' => 'Great permission']);
 
         $response = $this->actingAs($user, 'api')
                     ->call('POST', '/api/permission_assigns/', [
-                        'permission_name' => 'Great permission!',
+                        'permission_name' => 'Great permission',
                         'role_name' => $this->roleName,
                     ]);
 
         $this->assertEquals(201, $response->status());
         $testRole->permissions()->sync([]);
         RolePerms::revokeRole($user, $this->roleName);
-        RolePerms::deletePermission('Great permission!');
+        RolePerms::deletePermission('Great permission');
         RolePerms::deleteRole($this->roleName);
     }
 

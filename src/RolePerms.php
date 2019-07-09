@@ -3,8 +3,8 @@
 namespace kevinberg\LaravelRolePerms;
 use \App\User;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Validator;
 use kevinberg\LaravelRolePerms\Models\Role;
 use kevinberg\LaravelRolePerms\Models\Permission;
 
@@ -21,6 +21,10 @@ class RolePerms
      */
     public function userHasRole(User $user, String $roleName, ?Object $entity = null): bool
     {
+        if(!$this->roleNameIsValid($roleName)) {
+            return false;
+        }
+
         if($user->roles && ! $user->roles->isEmpty()) {
 
             if($entity !== null && isset($entity->id)) {
@@ -72,6 +76,10 @@ class RolePerms
      */
     public function userHasPermission(User $user, String $permissionName, ?Object $entity = null): bool
     {
+        if(!$this->permissionNameIsValid($permissionName)) {
+            return false;
+        }
+
         if($user->roles && ! $user->roles->isEmpty()) {
             if($entity !== null && isset($entity->id)) {
                 /**
@@ -130,6 +138,11 @@ class RolePerms
      */
     public function roleHasPermission(String $roleName, String $permissionName): bool
     {
+        if( !$this->roleNameIsValid($roleName) ||
+            !$this->permissionNameIsValid($permissionName)) {
+            return false;
+        }
+
         $role = Role::where('name', $roleName)->first();
 
         if($role) {
@@ -150,6 +163,10 @@ class RolePerms
      */
     public function grantRole(User $user, String $roleName, ?Object $entity = null): bool
     {
+        if(!$this->roleNameIsValid($roleName)) {
+            return false;
+        }
+
         if($this->userHasRole($user, $roleName, $entity)) {
             return true;
         }
@@ -186,6 +203,11 @@ class RolePerms
      */
     public function grantPermission(String $roleName, String $permissionName): bool
     {
+        if( !$this->roleNameIsValid($roleName) ||
+            !$this->permissionNameIsValid($permissionName)) {
+            return false;
+        }
+
         if($this->roleHasPermission($roleName, $permissionName)) {
             return true;
         }
@@ -213,7 +235,12 @@ class RolePerms
      */
     public function revokeRole(User $user, String $roleName, ?Object $entity = null): bool
     {
+        if(!$this->roleNameIsValid($roleName)) {
+            return false;
+        }
+
         $role = Role::where('name', $roleName)->first();
+
         if($role !== null) {
             if($this->userHasRole($user, $roleName, $entity)) {
 
@@ -251,6 +278,11 @@ class RolePerms
      */
     public function revokePermission(String $roleName, String $permissionName): bool
     {
+        if( !$this->roleNameIsValid($roleName) ||
+            !$this->permissionNameIsValid($permissionName)) {
+            return false;
+        }
+
         if($this->roleHasPermission($roleName, $permissionName)) {
             $role = Role::where('name', $roleName)->first();
             $permission = Permission::where('name', $permissionName)->first();
@@ -320,6 +352,10 @@ class RolePerms
      */
     public function createRole(String $roleName)
     {
+        if(!$this->roleNameIsValid($roleName)) {
+            return false;
+        }
+
         $role = new Role();
         $role->name = $roleName;
 
@@ -338,9 +374,12 @@ class RolePerms
      */
     public function createPermission(String $permissionName)
     {
+        if(!$this->permissionNameIsValid($permissionName)) {
+            return false;
+        }
+
         $permission = new Permission();
         $permission->name = $permissionName;
-        $permission->save();
 
         if($permission->save()) {
             return $permission;
@@ -357,6 +396,10 @@ class RolePerms
      */
     public function deleteRole(String $roleName): bool
     {
+        if(!$this->roleNameIsValid($roleName)) {
+            return false;
+        }
+
         $role = Role::where('name', $roleName)->first();
 
         if($role) {
@@ -374,6 +417,10 @@ class RolePerms
      */
     public function deletePermission(String $permissionName): bool
     {
+        if(!$this->permissionNameIsValid($permissionName)) {
+            return false;
+        }
+
         $permission = Permission::where('name', $permissionName)->first();
 
         if($permission) {
@@ -381,6 +428,32 @@ class RolePerms
         }
 
         return false;
+    }
+
+    /**
+     * Checks if a string is a valid permission name.
+     *
+     * @param String $permissionName
+     * @return boolean
+     */
+    public function permissionNameIsValid(String $permissionName): bool {
+        return preg_match(
+            config('role_perms.permission_name_pattern'),
+            $permissionName
+        );
+    }
+
+    /**
+     * Checks if a string is a valid permission name.
+     *
+     * @param String $roleName
+     * @return boolean
+     */
+    public function roleNameIsValid(String $roleName): bool {
+        return preg_match(
+            config('role_perms.role_name_pattern'),
+            $roleName
+        );
     }
 
 }

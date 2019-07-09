@@ -19,6 +19,9 @@ trait Roles
      */
     public function hasRole(String $roleName, ?Object $entity = null, bool $useCache = true): bool
     {
+        if(!RolePerms::roleNameIsValid($roleName)) {
+            return false;
+        }
 
         $roleCache = Cache::get(config('role_perms.roles_cache_key'));
 
@@ -71,6 +74,9 @@ trait Roles
      */
     public function hasPermission(String $permissionName, ?Object $entity = null, bool $useCache = true): bool
     {
+        if(!RolePerms::permissionNameIsValid($permissionName)) {
+            return false;
+        }
 
         $permCache = Cache::get(config('role_perms.perms_cache_key'));
 
