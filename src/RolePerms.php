@@ -444,7 +444,7 @@ class RolePerms
     }
 
     /**
-     * Checks if a string is a valid permission name.
+     * Checks if a string is a valid role name.
      *
      * @param String $roleName
      * @return boolean
