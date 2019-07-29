@@ -4,7 +4,7 @@
 
 
 
-    composer require kevinberg/laravel-role-perms
+    composer require bedoke/laravel-role-perms
 
 
 
