@@ -26,7 +26,9 @@ Inside the user class use the trait:
 
     use Roles;
 
+## Migration
 
+    php artisan migrate
 
 ## Seeds
 
