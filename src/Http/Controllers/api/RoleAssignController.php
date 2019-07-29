@@ -1,12 +1,12 @@
 <?php
 
-namespace kevinberg\LaravelRolePerms\Http\Controllers\Api;
+namespace bedoke\LaravelRolePerms\Http\Controllers\Api;
 
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use kevinberg\LaravelRolePerms\Models\Role;
-use kevinberg\LaravelRolePerms\Facades\RolePerms;
+use bedoke\LaravelRolePerms\Models\Role;
+use bedoke\LaravelRolePerms\Facades\RolePerms;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 

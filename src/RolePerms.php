@@ -1,11 +1,11 @@
 <?php
 
-namespace kevinberg\LaravelRolePerms;
+namespace bedoke\LaravelRolePerms;
 use \App\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
-use kevinberg\LaravelRolePerms\Models\Role;
-use kevinberg\LaravelRolePerms\Models\Permission;
+use bedoke\LaravelRolePerms\Models\Role;
+use bedoke\LaravelRolePerms\Models\Permission;
 
 class RolePerms
 {

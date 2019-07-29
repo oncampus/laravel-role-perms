@@ -2,7 +2,7 @@
 Route::group([
     'middleware' => 'auth:api',
     'prefix' => 'api',
-    'namespace' => 'kevinberg\LaravelRolePerms\Http\Controllers\Api'],
+    'namespace' => 'bedoke\LaravelRolePerms\Http\Controllers\Api'],
     function() {
         Route::resource('roles', 'RoleController')->only([
             'index', 'store', 'show', 'destroy'

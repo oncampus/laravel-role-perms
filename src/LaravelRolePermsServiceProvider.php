@@ -1,5 +1,5 @@
 <?php
-namespace kevinberg\LaravelRolePerms;
+namespace bedoke\LaravelRolePerms;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -23,7 +23,7 @@ class LaravelRolePermsServiceProvider extends ServiceProvider {
 
     public function register()
     {
-        $this->app->bind('RolePerms', 'kevinberg\LaravelRolePerms\RolePerms');
+        $this->app->bind('RolePerms', 'bedoke\LaravelRolePerms\RolePerms');
         $this->mergeConfigFrom(
             __DIR__.'/config/role_perms.php', 'role_perms'
         );

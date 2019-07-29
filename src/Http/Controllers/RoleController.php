@@ -1,13 +1,13 @@
 <?php
 
-namespace kevinberg\LaravelRolePerms\Http\Controllers;
+namespace bedoke\LaravelRolePerms\Http\Controllers;
 
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use kevinberg\LaravelRolePerms\Models\Role;
-use kevinberg\LaravelRolePerms\Models\Permission;
-use kevinberg\LaravelRolePerms\Facades\RolePerms;
+use bedoke\LaravelRolePerms\Models\Role;
+use bedoke\LaravelRolePerms\Models\Permission;
+use bedoke\LaravelRolePerms\Facades\RolePerms;
 use Illuminate\Support\Facades\Auth;
 
 class RoleController extends Controller

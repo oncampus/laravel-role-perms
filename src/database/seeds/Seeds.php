@@ -1,9 +1,9 @@
 <?php
 
-namespace kevinberg\LaravelRolePerms\Database;
+namespace bedoke\LaravelRolePerms\Database;
 use Illuminate\Database\Seeder;
-use kevinberg\LaravelRolePerms\Models\Role;
-use kevinberg\LaravelRolePerms\Models\Permission;
+use bedoke\LaravelRolePerms\Models\Role;
+use bedoke\LaravelRolePerms\Models\Permission;
 use App\User;
 
 class Seeds extends Seeder

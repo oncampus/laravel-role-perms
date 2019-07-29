@@ -1,13 +1,13 @@
 <?php
 
-namespace kevinberg\LaravelRolePerms\Tests\Unit;
+namespace bedoke\LaravelRolePerms\Tests\Unit;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use kevinberg\LaravelRolePerms\Facades\RolePerms;
-use kevinberg\LaravelRolePerms\Models\Role;
-use kevinberg\LaravelRolePerms\Models\Permission;
+use bedoke\LaravelRolePerms\Facades\RolePerms;
+use bedoke\LaravelRolePerms\Models\Role;
+use bedoke\LaravelRolePerms\Models\Permission;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use App\User;

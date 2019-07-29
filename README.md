@@ -16,7 +16,7 @@ Import the Roles trait in the User.php file:
 
 
 
-    use kevinberg\LaravelRolePerms\Traits\Roles;
+    use bedoke\LaravelRolePerms\Traits\Roles;
 
 
 
@@ -34,7 +34,7 @@ Inside the user class use the trait:
 
 
 
-    php artisan db:seed --class=kevinberg\LaravelRolePerms\Database\Seeds
+    php artisan db:seed --class=bedoke\LaravelRolePerms\Database\Seeds
 
 
 
@@ -64,7 +64,7 @@ Use `RolePerms::clearPermissionCache([User $user]);` or `RolePerms::clearRoleCac
 
 Include the Facade to use the following functions.
 
-    use kevinberg\LaravelRolePerms\Facades\RolePerms;
+    use bedoke\LaravelRolePerms\Facades\RolePerms;
 
 Now you can use the following functions:
 
