@@ -1,11 +1,11 @@
 <?php
 
-namespace bedoke\LaravelRolePerms\Http\Controllers;
+namespace Oncampus\LaravelRolePerms\Http\Controllers;
 
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use bedoke\LaravelRolePerms\Models\Role;
+use Oncampus\LaravelRolePerms\Models\Role;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 

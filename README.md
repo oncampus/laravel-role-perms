@@ -1,12 +1,5 @@
 # Install
 
-## Get the package
-
-
-
-    composer require bedoke/laravel-role-perms
-
-
 
 ## Extend the user class
 
@@ -16,7 +9,7 @@ Import the Roles trait in the User.php file:
 
 
 
-    use bedoke\LaravelRolePerms\Traits\Roles;
+    use Oncampus\LaravelRolePerms\Traits\Roles;
 
 
 
@@ -34,7 +27,7 @@ Inside the user class use the trait:
 
 
 
-    php artisan db:seed --class=bedoke\LaravelRolePerms\Database\Seeds
+    php artisan db:seed --class=Oncampus\LaravelRolePerms\Database\Seeds
 
 
 
@@ -64,7 +57,7 @@ Use `RolePerms::clearPermissionCache([User $user]);` or `RolePerms::clearRoleCac
 
 Include the Facade to use the following functions.
 
-    use bedoke\LaravelRolePerms\Facades\RolePerms;
+    use Oncampus\LaravelRolePerms\Facades\RolePerms;
 
 Now you can use the following functions:
 

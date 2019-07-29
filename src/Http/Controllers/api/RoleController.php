@@ -1,12 +1,12 @@
 <?php
 
-namespace bedoke\LaravelRolePerms\Http\Controllers\Api;
+namespace Oncampus\LaravelRolePerms\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
-use bedoke\LaravelRolePerms\Models\Role;
-use bedoke\LaravelRolePerms\Facades\RolePerms;
+use Oncampus\LaravelRolePerms\Models\Role;
+use Oncampus\LaravelRolePerms\Facades\RolePerms;
 
 class RoleController extends Controller
 {

@@ -1,11 +1,11 @@
 <?php
 
-namespace bedoke\LaravelRolePerms\Tests\Unit;
+namespace Oncampus\LaravelRolePerms\Tests\Unit;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use bedoke\LaravelRolePerms\Facades\RolePerms;
+use Oncampus\LaravelRolePerms\Facades\RolePerms;
 use Illuminate\Support\Facades\Cache;
 use App\User;
 
@@ -20,7 +20,7 @@ class RoleAssignTest extends TestCase
 
         # CREATE ROLE
         $createdRole = RolePerms::createRole($roleName);
-        $this->assertInstanceOf('bedoke\LaravelRolePerms\Models\Role', $createdRole);
+        $this->assertInstanceOf('Oncampus\LaravelRolePerms\Models\Role', $createdRole);
 
         # GRANT ROLE
         $grantRole = RolePerms::grantRole($testUser, $roleName);
@@ -32,7 +32,7 @@ class RoleAssignTest extends TestCase
 
         # CREATE PERMISSION
         $createdPermission = RolePerms::createPermission($permissionName);
-        $this->assertInstanceOf('bedoke\LaravelRolePerms\Models\Permission', $createdPermission);
+        $this->assertInstanceOf('Oncampus\LaravelRolePerms\Models\Permission', $createdPermission);
 
         # GRANT PERMISSION TO ROLE
         $grantPerm = RolePerms::grantPermission($roleName, $permissionName);

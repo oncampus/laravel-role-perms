@@ -1,10 +1,10 @@
 <?php
 
-namespace bedoke\LaravelRolePerms\Traits;
+namespace Oncampus\LaravelRolePerms\Traits;
 use Illuminate\Support\Facades\Cache;
-use bedoke\LaravelRolePerms\Models\Role;
-use bedoke\LaravelRolePerms\Models\Permission;
-use bedoke\LaravelRolePerms\Facades\RolePerms;
+use Oncampus\LaravelRolePerms\Models\Role;
+use Oncampus\LaravelRolePerms\Models\Permission;
+use Oncampus\LaravelRolePerms\Facades\RolePerms;
 
 
 trait Roles
@@ -124,7 +124,7 @@ trait Roles
      */
     public function roles()
     {
-        return $this->belongsToMany('bedoke\LaravelRolePerms\Models\Role', 'role_assign')
+        return $this->belongsToMany('Oncampus\LaravelRolePerms\Models\Role', 'role_assign')
             ->withPivot('id', 'entity_type', 'entity_id')
             ->withTimestamps();
     }
@@ -134,7 +134,7 @@ trait Roles
      */
     public function roleResponsibilities()
     {
-        return $this->belongsToMany('bedoke\LaravelRolePerms\Models\Role', 'role_responsibilities')
+        return $this->belongsToMany('Oncampus\LaravelRolePerms\Models\Role', 'role_responsibilities')
             ->withPivot('id')
             ->withTimestamps();
     }

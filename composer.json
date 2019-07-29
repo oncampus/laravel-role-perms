@@ -1,5 +1,5 @@
 {
-    "name": "bedoke/laravel-role-perms",
+    "name": "oncampus/laravel-role-perms",
     "description": "Role based permissions for laravel",
     "type": "library",
     "license": "MIT",
@@ -13,13 +13,13 @@
     "require": {},
     "autoload": {
         "psr-4": {
-            "bedoke\\LaravelRolePerms\\": "src/"
+            "oncampus\\LaravelRolePerms\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "bedoke\\LaravelRolePerms\\LaravelRolePermsServiceProvider"
+                "Oncampus\\LaravelRolePerms\\LaravelRolePermsServiceProvider"
             ]
         }
     },

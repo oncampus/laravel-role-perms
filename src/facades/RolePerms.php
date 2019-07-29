@@ -1,6 +1,6 @@
 <?php
 
-namespace bedoke\LaravelRolePerms\Facades;
+namespace Oncampus\LaravelRolePerms\Facades;
 use Illuminate\Support\Facades\Facade;
 
 class RolePerms extends Facade

@@ -1,7 +1,7 @@
 <?php
 
 Route::group(['middleware' => ['web']], function () {
-    Route::group(['namespace' => 'bedoke\LaravelRolePerms\Http\Controllers'], function() {
+    Route::group(['namespace' => 'Oncampus\LaravelRolePerms\Http\Controllers'], function() {
         Route::resource('roles', 'RoleController')->only([
             'index', 'store', 'show', 'update', 'destroy'
         ]);

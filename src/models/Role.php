@@ -1,6 +1,6 @@
 <?php
 
-namespace bedoke\LaravelRolePerms\Models;
+namespace Oncampus\LaravelRolePerms\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,7 +14,7 @@ class Role extends Model
      */
     public function permissions()
     {
-        return $this->belongsToMany('bedoke\LaravelRolePerms\Models\Permission', 'role_permissions')
+        return $this->belongsToMany('Oncampus\LaravelRolePerms\Models\Permission', 'role_permissions')
             ->withPivot('id')
             ->withTimestamps();
     }
