@@ -28,7 +28,7 @@ Inside the user class use the trait:
 
 
 
-    php artisan db:seed --class=Oncampus\LaravelRolePerms\Database\Seeds
+    php artisan db:seed --class="Oncampus\LaravelRolePerms\Database\Seeds"
 
 
 
