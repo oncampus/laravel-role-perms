@@ -1,5 +1,6 @@
 # Install
 
+	composer require oncampus/model-repositories
 
 ## Extend the user class
 
