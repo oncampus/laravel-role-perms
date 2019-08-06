@@ -13,13 +13,13 @@
     "require": {},
     "autoload": {
         "psr-4": {
-            "oncampus\\LaravelRolePerms\\": "src/"
+            "Oncampus\\LaravelRolePerms\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "oncampus\\LaravelRolePerms\\LaravelRolePermsServiceProvider"
+                "Oncampus\\LaravelRolePerms\\LaravelRolePermsServiceProvider"
             ]
         }
     },
