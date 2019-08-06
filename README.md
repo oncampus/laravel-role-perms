@@ -1,6 +1,6 @@
 # Install
 
-	composer require oncampus/model-repositories
+	composer require oncampus/laravel-role-perms
 
 ## Extend the user class
 
