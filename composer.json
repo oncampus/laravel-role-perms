@@ -19,7 +19,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Oncampus\\LaravelRolePerms\\LaravelRolePermsServiceProvider"
+                "oncampus\\LaravelRolePerms\\LaravelRolePermsServiceProvider"
             ]
         }
     },
